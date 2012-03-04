@@ -1,0 +1,6 @@
+h2= "List of in-stock " + type + "s"
+
+each item in items
+  li
+   | #{item.name} #{item.inStock}
+   a(href="/item/"+item.uniqueId) show

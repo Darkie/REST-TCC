@@ -1,0 +1,128 @@
+<html>
+	<head>
+		<script src="jquery-1.7.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="countdown/jquery.countdown.js" type="text/javascript" charset="utf-8"></script>
+		
+		<style>
+		body {
+		  min-width:407px;
+		  overflow-x:hidden;
+		}
+
+		table,th,td {
+			border: 1px solid black;
+			text-align: center;
+		}
+		</style>
+	</head>
+	<body>
+		<div id="responses">
+	
+		</div>
+
+		<script>
+
+/*
+		* Global variables. One stores the element that will be filled
+		* with data from the background page. The other is the window
+		* element of the background page itself. It's used to retrieve
+		* data from it (for example the responses array).
+*/
+		var responseElement = document.getElementById("responses");
+		var responses = JSON.parse(localStorage.getItem('responses'));
+		if(responses == null){
+			//if nothing inside, save an empty array
+			responses = [];
+			localStorage.setItem('responses', JSON.stringify(responses));
+		}
+
+/*
+		* This function is called whenever the icon of the extension
+		* is clicked. It fills the popup with all the information
+		* about the transactions that are taking place.
+*/
+		var fillPopup = function(){
+			//create the HTML element
+			var toFill = "";
+			for(var i = 0; i < responses.length; i++){
+				if(i == 0){
+					toFill = "<table><tr><th>Site Name</th><th>Deadline</th><th>Delete Transaction</th></tr>";
+				}
+		
+				var deadline = new Date(responses[i].deadline);
+				console.log(responses[i].deadline);
+				toFill += "<tr><td>"+responses[i].title+"</td><td> <span id='countdown"+responses[i].deadline+"'>" + deadline + "</span></td><td><span style='cursor: pointer;' onclick='deleteTransaction("+i+")'>X</span></td></tr>";
+			}
+			
+			//fill the HTML element
+			toFill += "</table><p/><button id='confirmButton' onclick='confirm();'>Confirm transaction</button>";
+			responseElement.innerHTML = toFill;
+			//fill the countdown
+			for(var i = 0; i < responses.length; i++){
+				console.log(responses[i].deadline);
+				$('#countdown'+responses[i].deadline).countdown({
+					until: new Date(responses[i].deadline), 
+					format: 'HMS',
+					compact: true,
+					alwaysExpire: true,
+					onExpiry: function(x){ 
+								return function(){
+									document.getElementById('countdown'+x).innerHTML = "Expired!";
+									//remove confirm button
+									$('#confirmButton').css('visibility', 'hidden'); 
+								} 
+							  }(responses[i].deadline),
+				});
+			}
+		}
+
+/*
+		* This function confirms all the transactions at once.
+		* It simply executes a PUT method on all the links in
+		* the responses array in the backgorund page.
+*/
+		var confirm = function(){
+			for(var i = 0; i < responses.length; i++){
+				execute("PUT", responses[i].confirmationLink);
+			}
+			//done with confirming, clean the responses array
+			responses = new Array();
+			localStorage.setItem('responses', JSON.stringify(responses));
+			//redraw popup
+			fillPopup();
+		}
+
+/*
+		* This function deletes one transaction, found in the
+		* responses array in the background page at index
+		* index (input of the function). It executes a DELETE
+		* on the URI stored.
+*/
+		var deleteTransaction = function(index){
+			if(responses[index].deadline > new Date()){
+				//not expired
+				execute("DELETE", responses[index].confirmationLink);
+			}
+			responses.splice(index, 1);
+			localStorage.setItem('responses', JSON.stringify(responses));
+			fillPopup();
+		}
+
+/*
+		* This function calls the function execute inside the 
+		* background page. Since once the user clicks outside
+		* the popup the latter closes, if we have some problem
+		* communicating with the server it will loose forever
+		* the information. By calling the script inside the
+		* background page we avoid this problem.
+*/
+		var execute = function(method, url, i){
+			chrome.extension.getBackgroundPage().execute(method, url, i);
+		}
+
+		//Fill the popup when opened.
+		fillPopup();
+
+		</script>
+	</body>
+</html>

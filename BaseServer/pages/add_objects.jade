@@ -1,0 +1,15 @@
+h1 Add a new object to the database
+
+form(method="post", enctype="multipart/form-data", content-type="application/x-www-form-urlencoded")
+	p Name
+		input(type="text", name="name")
+	p Type
+		select(name="type")
+			option book
+			option cd
+			option movie
+	p Stock quantity
+		input(type="text", name="inStock")
+	p Picture
+		input(type="text", name="picture")
+	input(type="submit")

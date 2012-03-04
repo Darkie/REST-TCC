@@ -1,0 +1,21 @@
+- if (transactions != "")
+	table
+		th Site Name
+		th Deadline
+		th Delete Transaction
+		
+		each item in transactions
+			tr
+				td= item.item_name
+				td
+					span(id='countdown'+item.timeout)= item.timeout
+				td
+					span(style='cursor: pointer;', onclick='deleteTransaction('+item.uniqueId+')')= "X"
+		
+	button(id='confirmButton', onclick='confirm();', value="Confirm", name="Confirm")= "Confirm"
+	
+	script(type="text/javascript")
+		fillCountdown(#{transactions});
+
+- else
+	h4= "No transactions to show."

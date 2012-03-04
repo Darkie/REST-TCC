@@ -1,0 +1,28 @@
+style
+	img {
+		float: right;
+		top: 0px;
+		position: relative;
+		height: 200px;
+	}
+
+-if(image)
+	img(src="" + image)
+-else
+	img(src="http://www.ouhsc.edu/find/Handlers/ImageHandler.ashx?FacultyID=101")
+
+h2= "Item: " + type
+p= "Title: " + name
+p= "Availability: " + inStock
+-if(inStock > 0)
+	button(onclick="reserve()")="Order"
+
+	script
+		function reserve(){
+			var xmlhttp = new XMLHttpRequest(); 
+				xmlhttp.open("POST", "http://localhost:"+#{port}+"/item/"+#{no}, true); 
+				xmlhttp.send(null);
+			}
+
+-else
+	p= "Item out of stock! Sorry for the inconvenience."

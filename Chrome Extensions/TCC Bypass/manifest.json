@@ -1,0 +1,23 @@
+{
+  "name": "TCC Bypass",
+  "version": "1.0",
+  "description": "Extension for Google Chrome to handle TCC on the cloud.",
+  "content_scripts": [
+    {
+      "matches": ["http://jquery.com/*", "http://code.jquery.com/*"],
+      "js": ["jquery-1.7.min.js", "background.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "icon.png",
+	"popup": "popup.html"
+  },
+  "background_page": "background.html",
+  "permissions": [
+    "webRequest",
+	"webRequestBlocking",
+	"background",
+	"experimental",
+	"<all_urls>"
+  ]
+}

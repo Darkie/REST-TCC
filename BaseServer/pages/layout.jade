@@ -1,0 +1,65 @@
+!!! 5
+html(lang="en")
+	head
+		title= "Item Seller"
+		link(rel="stylesheet", type="text/css", href="pages/style.css")
+		//link(rel='stylesheet', href="http://yandex.st/highlightjs/6.1/styles/default.min.css")
+		//script(src="http://yandex.st/highlightjs/6.1/highlight.min.js")
+		
+	style
+		body {
+			font-family: sans-serif;
+		}
+		
+		ul
+		{
+			list-style-type: none;
+		}
+		
+		#wrapper {
+			width:800px; 
+			margin:0 auto;
+			background-color: #B1FAD1;
+			-moz-border-radius: 15px;
+			border-radius: 15px;
+			padding: 10px;
+			height: 400px;
+		}
+		
+		#logo_container {
+			text-align: center;
+		}
+		
+		#container {
+			position: relative;
+		}
+		
+		#menu {
+			float: left;
+			width: 200px;
+		}
+		
+		#center {
+			float: right;
+			width: 600px;
+		}
+		
+	body
+	
+		#wrapper
+			#logo_container
+				h1(id="logo") Item Seller
+			
+			#container
+				#menu
+					ul
+						li
+							a(href='http://localhost:3000/') Home
+						li 
+							a(href='http://localhost:3000/show/book') Books
+						li 
+							a(href='http://localhost:3000/show/movie') Movies
+						li 
+							a(href='http://localhost:3000/show/cd') CDs
+
+				#center!= body

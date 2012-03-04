@@ -1,0 +1,117 @@
+<html>
+	<head>
+		<script src="jquery-1.7.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="countdown/jquery.countdown.js" type="text/javascript" charset="utf-8"></script>
+		
+		
+	</head>
+	<body>
+		<style>
+		body {
+		  min-width:407px;
+		  overflow-x:hidden;
+		}
+		</style>
+		<div id="content">
+		</div>
+		<script>
+		/*
+		* Fill the countounds with correct countdown
+		*/
+		var fillCountdown = function(transactions) {
+			//fill the countdown
+			console.log(transactions);
+			
+			//if single element, wrap it in an array for the following code
+			if(typeof transactions != Array){
+				transactions = [transactions];
+			}
+			
+			for(var i = 0; i < transactions.length; i++){
+				console.log("in for");
+				$('#countdown'+transactions[i].timeout).countdown({
+					until: new Date(transactions[i].timeout), 
+					format: 'HMS',
+					compact: true,
+					alwaysExpire: true,
+					onExpiry: function(x){ 
+								return function(){
+									document.getElementById('countdown'+x).innerHTML = "Expired!";
+									//remove confirm button
+									$('#confirmButton').css('visibility', 'hidden');
+								} 
+							  }(transactions[i].timeout),
+				});
+			}
+		}
+		
+		/*
+		* This function confirms all the transactions at once.
+		* It simply executes a PUT method on the server telling
+		* to confirm all the transactions.
+		*/
+		var confirm = function(){
+			execute("PUT", "http://localhost:3000/tx/confirm");
+			console.log("confirm clicked");
+		}
+		
+		/*
+		* This function deletes one transaction by sending a
+		* new DELETE request to the server specifiying which
+		* transaction should be deleted.
+		*/
+		var deleteTransaction = function(uniqueId){
+			execute("DELETE", "http://localhost:3000/tx/delete/" + uniqueId);
+			console.log("delete clicked");
+		}
+		
+		/*
+		* This function executes an HTTP request with method
+		* method and uri url (inputs of the function). Used
+		* for PUT and DELETE but also GET.
+		*/
+		var execute = function(method, url){
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.open(method, url, true);
+			xmlhttp.onreadystatechange = function(){
+				console.log("ciao");
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+					document.getElementById("content").innerHTML = xmlhttp.responseText;
+					
+					//if there is some script received, we have to execute it
+					//referring to the function to start the countdown
+					var scriptIndex = xmlhttp.responseText.indexOf("fillCountdown");
+					if(scriptIndex != -1){
+						var endOfScript = xmlhttp.responseText.lastIndexOf('</scri');
+						var scriptLength = endOfScript - scriptIndex;
+						var scriptToExecute = xmlhttp.responseText.substr(scriptIndex, scriptLength);
+						
+						console.log(JSON.stringify(scriptToExecute));
+						//eval the script
+						eval(scriptToExecute);
+					}
+				}
+				else {
+					//something got wrong, display error message
+					document.getElementById("content").innerHTML = "There was some error connecting to the server";		
+				}
+			}
+			xmlhttp.send(null);
+		}
+		
+		/*
+		* Get the type of an object.
+		* Debug purposes only.
+		*/
+		function getType(obj){
+		    if (obj === undefined) { return 'undefined'; }
+		    if (obj === null) { return 'null'; }
+		    return Object.prototype.toString.call(obj).split(' ').pop().split(']').shift().toLowerCase();
+		}
+		
+		//get the first page
+		execute("GET", "http://localhost:3000/");
+
+		</script>
+	</body>
+</html>
