@@ -23,44 +23,41 @@ chrome.webRequest.onHeadersReceived.addListener(
 			if (details.responseHeaders[i].name === 'Link' && details.responseHeaders[i].value.indexOf("XTCC") != -1) {
 				//check that is the response for the booking flight/../seat/../XTCC post
 				if(details.responseHeaders[i].value.indexOf("deadline") == -1){
-					//check if it's a duplicate
-					if(notDuplicate(details.responseHeaders[i].value)){
-						//store the link (first parse it)
-						var str = details.responseHeaders[i].value.substr(0, details.responseHeaders[i].value.indexOf(">"));
-						str = str.substring(1, str.length);
-						//make a GET request and receive info data
-						$.ajax({
-							beforeSend: function(req) {
-								req.setRequestHeader("Accept", "application/json");
-							},
-							type: "GET",
-							url: str,
-							success: function(data){
-								//store everything in the response array
-								var jsonResult = JSON.parse(data);
-								console.log(data);
-								var receivedData = {
-									confirmationLink: str,
-									deadline: jsonResult.deadline,
-									title: jsonResult.title,
-									uniqueIdTx : jsonResult.uniqueIdTx,
-								};
-								
-								//send data to the server
-								//if this fails, it keeps trying like when confirming.
-								execute("POST", "http://localhost:3000/addTransaction", receivedData);
-								/*$.ajax({
-									type: "POST",
-									url: "http://localhost:3000/addTransaction",
-									data: receivedData,
-									success: function(data){
-										console.log(data);
-									}
-								});*/
-								console.log(receivedData);
-							}
-						});
-					}
+					//store the link (first parse it)
+					var str = details.responseHeaders[i].value.substr(0, details.responseHeaders[i].value.indexOf(">"));
+					str = str.substring(1, str.length);
+					//make a GET request and receive info data
+					$.ajax({
+						beforeSend: function(req) {
+							req.setRequestHeader("Accept", "application/json");
+						},
+						type: "GET",
+						url: str,
+						success: function(data){
+							//store everything in the response array
+							var jsonResult = JSON.parse(data);
+							console.log(data);
+							var receivedData = {
+								confirmationLink: str,
+								deadline: jsonResult.deadline,
+								title: jsonResult.title,
+								uniqueIdTx : jsonResult.uniqueIdTx,
+							};
+							
+							//send data to the server
+							//if this fails, it keeps trying like when confirming.
+							execute("POST", "http://localhost:3000/addTransaction", receivedData);
+							/*$.ajax({
+								type: "POST",
+								url: "http://localhost:3000/addTransaction",
+								data: receivedData,
+								success: function(data){
+									console.log(data);
+								}
+							});*/
+							console.log(receivedData);
+						}
+					});
 				}
 			}
 		}
@@ -114,18 +111,4 @@ var execute = function(method, url, dataToSend, time){
 	};
 
 	xmlhttp.send(null); */
-}
-	
-/*
-*Checks if the link received is not already inside the array
-*This should neverever happen, if it happens something is
-*really messed up badly.
-*/
-var notDuplicate = function(responseUrl){
-	var responses = JSON.parse(localStorage.getItem('responses'));
-	for(var i = 0; i < responses.length; i++){
-		if(responses[i].confirmationLink == responseUrl)
-			return false;
-	}
-	return true;
 }

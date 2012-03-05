@@ -51,6 +51,7 @@ app.get('/', function(req, res){
 	if(req.session.user){
 		//directly get the transactions
 		getTransactions(req.session.user, function(txs){
+			console.log(txs);
 			if(txs == undefined){
 				res.render(__dirname + '/pages/base.jade', {
 					transactions : null,
@@ -273,7 +274,7 @@ var checkLogin = function(user, callback){
 		if (err) {
   	 		throw err; 
   		} 
-  		else if(user != undefined || user != null) { 
+  		else if(user != undefined || user != null) {
 			callback(user);
   		}
 	});
@@ -287,7 +288,8 @@ var checkLogin = function(user, callback){
 * transactions with all the fields except for _id.
 */
 var getTransactions = function(user, callback){
-	Transaction.find({username : user.username}, ['uniqueId', 'confirmation_link', 'item_name', 'timeout', 'username'], function(err, txs){
+	Transaction.find({username : user.username}, function(err, txs){
+		console.log("user : " + user.username + " with txs: " + txs);
 		callback(txs);
 	});
 }
