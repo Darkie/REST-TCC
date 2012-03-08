@@ -20,12 +20,7 @@
 		*/
 		var fillCountdown = function(transactions) {
 			//fill the countdown
-			console.log(transactions);
-			
-			//if single element, wrap it in an array for the following code
-			if(typeof transactions != Array){
-				transactions = [transactions];
-			}
+			console.log("transactions received: " + JSON.stringify(transactions));
 			
 			for(var i = 0; i < transactions.length; i++){
 				console.log("in for");
@@ -70,7 +65,7 @@
 		* method and uri url (inputs of the function). Used
 		* for PUT and DELETE but also GET.
 		*/
-		var execute = function(method, url){
+		var execute = function(method, url, callback){
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.open(method, url, true);
 			xmlhttp.onreadystatechange = function(){
@@ -90,6 +85,12 @@
 						//eval the script
 						eval(scriptToExecute);
 					}
+					
+					//call the callback, if there is one
+					if(callback){
+						callback();
+					}
+					
 				}
 				else {
 					//something got wrong, display error message
@@ -97,6 +98,45 @@
 				}
 			}
 			xmlhttp.send(null);
+		}
+		
+		/*
+		* Function called when the first button is pressed. Gets the
+		* transaction server url and inquiries it with the execute
+		* function.
+		*/
+		var getServer = function(){
+			var server = document.getElementById('txmanager').value;
+			console.log(server);
+			execute("GET", server, function(){
+				//if success, remove the content in the getServer div
+				//and save the url in the bg page
+				chrome.extension.getBackgroundPage().transactionUrl = server;
+				document.getElementById('getServer').innerHTML = "";
+			});
+		}
+		
+		/*
+		* Function that is called when the popup is first opened.
+		* If we already have a transactionUrl then a GET request
+		* is executed to that url, otherwise a form to insert it
+		* is shown.
+		*/
+		var setup = function(){
+			console.log("setup")
+			if(chrome.extension.getBackgroundPage().transactionUrl == ""){
+				console.log("no url")
+				//no transactionUrl, show form
+				document.getElementById('getServer').innerHTML = 'Transaction manager server: <input type="text" name="txmanager" id="txmanager" /><br /><input type="submit" value="Submit" onclick="getServer();"/>';
+			}
+			else {
+				console.log("found url")
+				//execute GET request
+				execute("GET", chrome.extension.getBackgroundPage().transactionUrl, function(){
+					//if success, remove the content in the getServer div
+					document.getElementById('getServer').innerHTML = "";
+				});
+			}
 		}
 		
 		/*
@@ -109,9 +149,13 @@
 		    return Object.prototype.toString.call(obj).split(' ').pop().split(']').shift().toLowerCase();
 		}
 		
-		//get the first page
-		execute("GET", "http://localhost:3000/");
-
+		</script>
+		<div id="getServer" style="display: inline;">
+			
+		</div>
+		
+		<script>
+			setup();
 		</script>
 	</body>
 </html>

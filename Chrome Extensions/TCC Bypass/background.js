@@ -4,6 +4,11 @@
 */
 var loggedIn = false;
 
+/*
+* Variable that stores the transaction website link.
+*/
+var transactionUrl = "";
+
 chrome.webRequest.onBeforeSendHeaders.addListener(
   function(details) {
     for (var i = 0; i < details.requestHeaders.length; ++i) {

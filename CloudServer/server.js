@@ -40,7 +40,6 @@ app.listen(PORT);
 //app.use(app.router); 
 
 var db = mongoose.connect('mongodb://localhost:27017/CloudDB');
-var Item = db.model('Item');
 var Transaction = db.model('Transaction');
 var User = db.model('User');
 
@@ -152,6 +151,7 @@ app.post('/addTransaction', function(req, res){
 		trns.item_name = tx.title;
 		trns.confirmation_link = tx.confirmationLink;
 		trns.uniqueId = tx.uniqueIdTx;
+		trns.pending = false;
 		console.log("transaction to be added: " + trns);
 		//create a timeout from the deadline minus the current time, which
 		//gives the number of milliseconds after w	hich the timeout will expire
@@ -240,19 +240,24 @@ app.put('/tx/confirm', function(req, res){
 		getTransactions(req.session.user, function(txs){
 			if(txs){
 				console.log(txs);
-				//if the user has transactions to confirm, confirm them all
-				for(var i = 0; i < txs.length; i++){
-					console.log(txs[i].uniqueId);
-					//do the PUT on the confirmation link
-					execute("PUT", txs[i].confirmation_link, txs[i], function(tx){
-						console.log(tx.uniqueId);
-						//callback, remove the transaction from the database
-						Transaction.remove({uniqueId : tx.uniqueId}, function(){
-							//do nothing, because it's a loop, impossible to tell 
-							//which callback will be called.
+				//set all transactions to pending, then perform the transaction
+				//if it dies during the process, in the startup it should try it
+				//again and again (same process)
+				setAllPending(req.session.user, function(){
+					//if the user has transactions to confirm, confirm them all
+					for(var i = 0; i < txs.length; i++){
+						console.log(txs[i].uniqueId);
+						//do the PUT on the confirmation link
+						execute("PUT", txs[i].confirmation_link, txs[i], function(tx){
+							console.log(tx.uniqueId);
+							//callback, remove the transaction from the database
+							Transaction.remove({uniqueId : tx.uniqueId}, function(){
+								//do nothing, because it's a loop, impossible to tell 
+								//which callback will be called.
+							});
 						});
-					});
-				}
+					}
+				});
 			}
 		});
 		//send back something to tell the user everything is all right.
@@ -288,7 +293,7 @@ var checkLogin = function(user, callback){
 * transactions with all the fields except for _id.
 */
 var getTransactions = function(user, callback){
-	Transaction.find({username : user.username}, function(err, txs){
+	Transaction.find({username : user.username}, { '_id': 0, 'uniqueId' :1, 'timeout': 1, 'confirmation_link': 1, 'item_name': 1}, function(err, txs){
 		console.log("user : " + user.username + " with txs: " + txs);
 		callback(txs);
 	});
@@ -304,7 +309,7 @@ var findTransaction = function(transactionId, callback){
 		if (err) {
   	 		throw err; 
   		} 
-  		else { 
+  		else {
 			callback(tx);
   		}
 	}); 
@@ -346,6 +351,21 @@ var execute = function(method, url, tx, callback, time){
 }
 
 /*
+* Function to set all the transactions of a certain user in
+* pending status. Used when user wants to commit all the
+* transactions he has in his account.
+*/
+var setAllPending = function(user, callback){
+	Transaction.update({username : user.username}, {$set: { pending : true }}, function(err){
+		if(err)
+			console.log(err);
+		
+		console.log("saved all pending transactions");
+		callback();
+	});
+}
+
+/*
 * This function recreates the timeouts that may be lost
 * when the server + database start up. It iterates through
 * the transactions in the database and for each transaction
@@ -365,6 +385,17 @@ var setDeadlineTimouts = function(){
 				//expired, delete the transaction
 				Transaction.remove({uniqueId : txs[i].uniqueId}, function(){
 					//do something here too?
+				});
+			}
+			else if(txs[i].pending){
+				//transaction in pending, should be execute (since has not timeout yet)
+				execute("PUT", txs[i].confirmation_link, txs[i], function(tx){
+					console.log("found transaction with id : " + tx.uniqueId + " to be committed");
+					//callback, remove the transaction from the database
+					Transaction.remove({uniqueId : tx.uniqueId}, function(){
+						//do nothing, because it's a loop, impossible to tell 
+						//which callback will be called.
+					});
 				});
 			}
 			else {

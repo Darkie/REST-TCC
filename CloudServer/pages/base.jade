@@ -15,7 +15,7 @@
 	button(id='confirmButton', onclick='confirm();', value="Confirm", name="Confirm")= "Confirm"
 	
 	script(type="text/javascript")
-		fillCountdown(#{transactions});
+		fillCountdown([#{transactions}]);
 
 - else
 	h4= "No transactions to show."
