@@ -1,0 +1,17 @@
+Server:
+	grid.inf.unisi.ch
+	[user, pass] uguali a usi account
+
+Tools per stress testing
+	httperf
+	jmeter
+
+Tools per LaTeX per plottare
+	pgfplots
+	
+TODO:
+	installare versione node compatibile con CloudServer
+	testare funzionalità on browser + plugin (spostarlo su un server, non lo stesso)
+	vedere come scrivere un estensione per node.js
+	testare CloudServer con httperf + jmeter
+	plottare con pgfplots
