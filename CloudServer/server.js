@@ -10,7 +10,7 @@ var express  = require('express'),
 	schemas  = require('./Schema'),
 	Schema   = mongoose.Schema,
 	jade	 = require('jade'),
-	$ = require('jquery'),
+	//$ = require('jquery'),
 	XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 	
 
@@ -29,7 +29,7 @@ app.set("view options", { layout: true });
 
 //setup of the timeout & port
 var PORT = process.argv[2] ? parseInt(process.argv[2]) : 3000;
-var TIMEOUT = process.argv[2] ? parseInt(process.argv[3]) : 86400000;
+var TIMEOUT = process.argv[3] ? parseInt(process.argv[3]) : 86400000;
 
 //Handles post requests
 app.use(require('connect').bodyParser());
