@@ -51,7 +51,7 @@ chrome.webRequest.onHeadersReceived.addListener(
 							
 							//send data to the server
 							//if this fails, it keeps trying like when confirming.
-							execute("POST", "http://localhost:3000/addTransaction", receivedData);
+							execute("POST", transactionUrl + "/addTransaction", receivedData);
 							/*$.ajax({
 								type: "POST",
 								url: "http://localhost:3000/addTransaction",

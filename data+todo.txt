@@ -1,5 +1,5 @@
 Server:
-	grid.inf.unisi.ch
+	ssh -X babazadm@grid.inf.unisi.ch
 	[user, pass] uguali a usi account
 
 Tools per stress testing
@@ -10,8 +10,17 @@ Tools per LaTeX per plottare
 	pgfplots
 	
 TODO:
-	installare versione node compatibile con CloudServer
-	testare funzionalità on browser + plugin (spostarlo su un server, non lo stesso)
+	(problema cookies login)
+	(testare funzionalità on browser + plugin (spostarlo su un server, non lo stesso))
 	vedere come scrivere un estensione per node.js
 	testare CloudServer con httperf + jmeter
 	plottare con pgfplots
+	
+	
+	testing attraverso un altro server node che crea richieste e simula di essere un client
+		si usa node-client o httpclient (libreria non so come si chiama, installarla!)
+		fare in modo che si logghi, faccia richieste e confermi / cancelli transazioni, ciò significa:
+			- tenere i cookies e prob. mandarli a mano dopo il login
+			- spostare tutto ciò che è nella estenzione che filtra le richieste in node [PARTE DIFFICILE]
+		mettere ItemServer su grid e farlo runnare su un altro processo (chiedere Achille)
+		mettere node-client su grid e runnarlo da li su un altro processo ancora

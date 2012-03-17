@@ -16,6 +16,11 @@
 		</div>
 		<script>
 		/*
+		* Get the link of the transaction server
+		*/
+		var cloudServerUrl = chrome.extension.getBackgroundPage().transactionUrl;
+		
+		/*
 		* Fill the countounds with correct countdown
 		*/
 		var fillCountdown = function(transactions) {
@@ -46,8 +51,8 @@
 		* to confirm all the transactions.
 		*/
 		var confirm = function(){
-			execute("PUT", "http://localhost:3000/tx/confirm");
-			console.log("confirm clicked");
+			execute("PUT", cloudServerUrl + "/tx/confirm");
+			console.log("confirm clicked with uri : " + cloudServerUrl + "/tx/confirm/");
 		}
 		
 		/*
@@ -56,8 +61,8 @@
 		* transaction should be deleted.
 		*/
 		var deleteTransaction = function(uniqueId){
-			execute("DELETE", "http://localhost:3000/tx/delete/" + uniqueId);
-			console.log("delete clicked");
+			execute("DELETE", cloudServerUrl + "/tx/delete/" + uniqueId);
+			console.log("delete clicked with uri : " + cloudServerUrl + "/tx/delete/");
 		}
 		
 		/*

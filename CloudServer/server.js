@@ -77,7 +77,10 @@ app.post('/register', function(req, res){
 	newUser.username = req.body.username;
 	newUser.password = req.body.password;
 	newUser.email = req.body.email;
+	console.log("here");
 	newUser.save(function (err) {
+		if(err)
+			console.log(err);
 		console.log("User saved!  with username " + newUser.username + " and pass " + newUser.password);
 	});
 	
@@ -275,8 +278,10 @@ app.put('/tx/confirm', function(req, res){
 * database, the callback is executed.
 */
 var checkLogin = function(user, callback){
+	console.log(user);
 	User.findOne({"username" : user.username, "password" : user.password}, function(err, user) {
 		if (err) {
+			console.log(err);
   	 		throw err; 
   		} 
   		else if(user != undefined || user != null) {
