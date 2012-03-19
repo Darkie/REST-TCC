@@ -6,6 +6,7 @@
 */
 
 var express  = require('express'),
+	http = require ('http'),
 	XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 	
 
@@ -34,5 +35,78 @@ app.listen(PORT);
 * GET base page, login or register
 */
 app.get('/', function(req, res){
-	res.send("hello world");
+	var options = {
+		host: 'cloudservertest.nodester.com',
+		port: 80,
+		path: '/',
+		method: 'GET'
+	};
+	
+	var req = http.request(options, function(res){
+		console.log('status: ' + res.statusCode);
+		console.log('headers: ' + JSON.stringify(res.headers));
+		res.setEncoding('utf8');
+		res.on('data', function(chunk){
+			console.log("body: " + chunk);
+		});
+	});
+	
+	req.on('error', function(e) {
+		console.log('problem with request: ' + e.message);
+	});
+
+	// write data to request body
+	req.write('data\n');
+	req.write('data\n');
+	req.end();
 });
+
+/*
+* Function to login on cloudserver
+*/
+var login = function() {
+	var querystring = require('querystring');
+	var cookie;
+
+	var data = querystring.stringify({
+			username: 'm',
+			password: 'm',
+		});
+
+	var options = {
+	    host: 'grid.inf.unisi.ch',
+	    port: 3000,
+	    path: '/login',
+	    method: 'POST',
+	    headers: {
+	        'Content-Type': 'application/x-www-form-urlencoded',
+	        'Content-Length': data.length
+	    }
+	};
+
+	var req = http.request(options, function(res) {
+		console.log('status: ' + res.statusCode);
+		console.log('cookie: ' + JSON.stringify(res.headers["set-cookie"][0]));
+		cookie = res.headers["set-cookie"][0];
+		res.setEncoding('utf8');
+		res.on('data', function (chunk) {
+			//after login, do some orders
+			doOrders();
+		});
+	});
+
+	req.write(data);
+	req.end();
+}
+
+/*
+* Function to do some order
+*/
+var doOrders = function() {
+	
+}
+
+/*
+* Test code to run the code as soon as the server is started
+*/
+login();

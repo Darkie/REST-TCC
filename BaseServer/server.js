@@ -393,9 +393,15 @@ var saveItem = function(newItem){
 			if(err)
 				console.log(err);
 			else{
-				//set it into the item
-				newItem.uniqueId = items[0].uniqueId + 1;
-				console.log(items)
+				//check if no item in db start with uniqueId = 1
+				if(items[0] == undefined){
+					newItem.uniqueId = 1;
+				}
+				else {
+					//set it into the item
+					newItem.uniqueId = items[0].uniqueId + 1;
+					console.log(items);
+				}
 				//save the item
 				newItem.save(function (err) {
 					console.log("Item saved!");

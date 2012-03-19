@@ -342,7 +342,7 @@ var execute = function(method, url, tx, callback, time){
 			// Handle error, retry DELETE or PUT in exponential way
 			console.log("problem! And i = " + time + " and url " + url + " and xmlhttp.status = " + xmlhttp.status + " and xmlhttp.readyState = " + xmlhttp.readyState);
 			// Calls execute(method, url, i*2) after i milliseconds.
-			setTimeout(execute, time, method, url,tx, callback, time*2);
+			setTimeout(execute, time, method, url, tx, callback, time*2);
 			return;
 		}
 		
