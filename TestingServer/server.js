@@ -91,8 +91,11 @@ var login = function() {
 		cookie = res.headers["set-cookie"][0];
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
-			//after login, do some orders
+			//after login, do some orders 
+			
+			//XXX: JUST TESTING
 			doOrder(1);
+			
 		});
 	});
 	
@@ -108,7 +111,7 @@ var login = function() {
 * Function to do some orders
 */
 var doOrders = function() {
-	
+	//call many times doOrder with different ids?
 }
 
 /*
@@ -127,7 +130,6 @@ var doOrder = function(item_id){
 	};
 
 	var req = http.request(options, function(res) {
-		console.log('cookie: ' + JSON.stringify(res.headers["link"]));
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
 			//have to check if the headers contain 'Link' and 'XTCC'
@@ -158,26 +160,122 @@ var doOrder = function(item_id){
 * Function to get more info from the reserved item
 */
 var getInfoForItem = function(uri) {
+	//parse data from uri to fill options variable
 	var data = parse(uri);
-	console.log(JSON.stringify(data));
+	
 	var options = {
-		host: data.host,
+	  	host: data.hostname,
 	    port: data.port,
 	    path: data.path,
-	    method: 'GET',
-	    headers: {
+		headers: {
 			'cookie' : cookie,
 			'accept' : 'application/json',
 		}
+	};
+
+	http.get(options, function(res) {
+		console.log("Got response: " + res.statusCode);
+		res.setEncoding('utf8');
+		res.on('data', function(chunk){
+			chunk = JSON.parse(chunk);
+			//store data and/or send it directly to CloudServer
+			var receivedData = {
+				confirmationLink: chunk.uri,
+				deadline: chunk.deadline,
+				title: chunk.title,
+				uniqueIdTx : chunk.uniqueIdTx,
+			};
+			
+			sendDataToCloud(receivedData);
+		});
+	}).on('error', function(e) {
+		console.log("Got error: " + e.message);
+	});
+}
+
+/*
+* Function to send data of a single reservation order
+* to the CloudServer.
+*/
+var sendDataToCloud = function(receivedData){
+	var data = querystring.stringify(receivedData);
+	//setup the options
+	var options = {
+	    host: 'grid.inf.unisi.ch',
+	    port: 3000,
+	    path: '/addTransaction',
+	    method: 'POST',
+	    headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+			'Content-Length': data.length,
+	        'cookie' : cookie,
+	    }
 	};
 	
 	var req = http.request(options, function(res) {
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
-			console.log("received from get: " + chunk);
-			
-			//store all the info
-			//addtrasaction to cloudserver
+			console.log(chunk);
+			deleteTransaction(receivedData.uniqueIdTx);
+		});
+	});
+	
+	req.on('error', function(e) {
+		console.log('problem with request: ' + e.message);
+	});
+
+	req.write(data);
+	req.end();
+}
+
+/*
+* Function to confirm all of what we have
+*/
+var confirm = function() {
+	var options = {
+	    host: 'grid.inf.unisi.ch',
+	    port: 3000,
+	    path: '/tx/confirm',
+	    method: 'PUT',
+	    headers: {
+			'cookie' : cookie,
+	    }
+	};
+	
+	var req = http.request(options, function(res) {
+		res.setEncoding('utf8');
+		res.on('data', function (chunk) {
+			console.log(chunk);
+		});
+	});
+	
+	req.on('error', function(e) {
+		console.log('problem with request: ' + e.message);
+	});
+
+	req.write('data\n');
+	req.write('data\n');
+	req.end();
+}
+
+/*
+* Function to delete something
+*/
+var deleteTransaction = function(item_id){
+	var options = {
+	    host: 'grid.inf.unisi.ch',
+	    port: 3000,
+	    path: '/tx/delete/' + item_id,
+	    method: 'DELETE',
+	    headers: {
+			'cookie' : cookie,
+	    }
+	};
+	
+	var req = http.request(options, function(res) {
+		res.setEncoding('utf8');
+		res.on('data', function (chunk) {
+			console.log(chunk);
 		});
 	});
 	
