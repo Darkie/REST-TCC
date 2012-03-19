@@ -23,3 +23,6 @@ TODO:
 			- spostare tutto ciò che è nella estenzione che filtra le richieste in node [PARTE DIFFICILE]
 		mettere ItemServer su grid e farlo runnare su un altro processo (chiedere Achille)
 		mettere node-client su grid e runnarlo da li su un altro processo ancora
+
+
+riserva attraverso post a "http://grid.inf.unisi.ch:"+3010+"/item/"+3

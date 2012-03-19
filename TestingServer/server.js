@@ -7,7 +7,9 @@
 
 var express  = require('express'),
 	http = require ('http'),
-	XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+	XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
+	querystring = require('querystring'),
+	parse = require('url').parse;
 	
 
 //FOR HTTPS (TODO later)
@@ -21,8 +23,10 @@ app.use(express.session({
 	maxAge : new Date(Date.now() + 3600000), //1 hour
 }));
 
-//setup of the timeout & port
+//setup of the ports & cookie
 var PORT = process.argv[2] ? parseInt(process.argv[2]) : 3000;
+var ITEM_PORT = 3010;
+var cookie;
 
 //Handles post requests
 app.use(require('connect').bodyParser());
@@ -65,9 +69,6 @@ app.get('/', function(req, res){
 * Function to login on cloudserver
 */
 var login = function() {
-	var querystring = require('querystring');
-	var cookie;
-
 	var data = querystring.stringify({
 			username: 'm',
 			password: 'm',
@@ -91,8 +92,12 @@ var login = function() {
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
 			//after login, do some orders
-			doOrders();
+			doOrder(1);
 		});
+	});
+	
+	req.on('error', function(e) {
+		console.log('problem with request: ' + e.message);
 	});
 
 	req.write(data);
@@ -100,10 +105,89 @@ var login = function() {
 }
 
 /*
-* Function to do some order
+* Function to do some orders
 */
 var doOrders = function() {
 	
+}
+
+/*
+* Function to place one single order on one single object
+*/
+var doOrder = function(item_id){
+	var options = {
+	    host: 'grid.inf.unisi.ch',
+	    port: ITEM_PORT,
+	    path: '/item/' + item_id,
+	    method: 'POST',
+	    headers: {
+	        'cookie' : cookie,
+			'accept' : 'application/json+tcc',
+	    }
+	};
+
+	var req = http.request(options, function(res) {
+		console.log('cookie: ' + JSON.stringify(res.headers["link"]));
+		res.setEncoding('utf8');
+		res.on('data', function (chunk) {
+			//have to check if the headers contain 'Link' and 'XTCC'
+			if(res.headers["link"] && res.headers["link"].indexOf("XTCC") != -1){
+				console.log("has a link, link is for TCC");
+				//parse url
+				var str = res.headers["link"].substr(0, res.headers["link"].indexOf(">"));
+				str = str.substring(1, str.length);
+				console.log("PARSED URL: " + str);
+				if(res.headers["deadline"] == undefined){
+					//deadline undefined, get more info through the link
+					getInfoForItem(str);
+				}
+			}
+		});
+	});
+	
+	req.on('error', function(e) {
+		console.log('problem with request: ' + e.message);
+	});
+
+	req.write('data\n');
+	req.write('data\n');
+	req.end();
+}
+
+/*
+* Function to get more info from the reserved item
+*/
+var getInfoForItem = function(uri) {
+	var data = parse(uri);
+	console.log(JSON.stringify(data));
+	var options = {
+		host: data.host,
+	    port: data.port,
+	    path: data.path,
+	    method: 'GET',
+	    headers: {
+			'cookie' : cookie,
+			'accept' : 'application/json',
+		}
+	};
+	
+	var req = http.request(options, function(res) {
+		res.setEncoding('utf8');
+		res.on('data', function (chunk) {
+			console.log("received from get: " + chunk);
+			
+			//store all the info
+			//addtrasaction to cloudserver
+		});
+	});
+	
+	req.on('error', function(e) {
+		console.log('problem with request: ' + e.message);
+	});
+
+	req.write('data\n');
+	req.write('data\n');
+	req.end();
 }
 
 /*

@@ -129,7 +129,7 @@ app.post('/item/:item_no', function(req, res){
 					//and it's impossible to make up an id up to the millisecond precision
 					var uniqueId = new Date().getTime();
 					//then link
-					var confLink = "<http://localhost:"+PORT+"/buy/" + req.params.item_no + "/XTCC?id="+uniqueId+">; rel=\"confirm\"";
+					var confLink = "<http://"+req.headers.host+"/buy/" + req.params.item_no + "/XTCC?id="+uniqueId+">; rel=\"confirm\"";
 					//then deadline
 					var timestamp = new Date().getTime() + TIMEOUT;
 					//save everything in the database
@@ -206,7 +206,7 @@ app.get('/buy/:item_no/XTCC', function(req, res){
 		if(tx){
 			//transaction found
 			var response = ""; 
-			var confLink = "http://localhost:"+PORT+"/buy/" + req.params.item_no + "/XTCC?id="+uniqueId;
+			var confLink = "http://"+req.headers.host+"/buy/" + req.params.item_no + "/XTCC?id="+uniqueId;
 			
 			//get the item name
 			getItemName(req.params.item_no, function(itemName){
@@ -225,7 +225,7 @@ app.get('/buy/:item_no/XTCC', function(req, res){
 				else if(req.accepts('application/xml')){
 					//if XML asked
 					console.log("XML asked");
-					response = "<payment><uri>"+confLink+"</uri> <deadline>"+tx.timestamp+"</deadline> <title>Item: " + itemName + "</title> <rel>confirm</rel></payment>";
+					response = "<payment><uri>"+confLink+"</uri> <deadline>"+tx.timeout+"</deadline> <title>Item: " + itemName + "</title> <rel>confirm</rel></payment>";
 				}
 				res.send(response);
 			});
