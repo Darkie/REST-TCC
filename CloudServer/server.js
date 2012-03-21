@@ -268,7 +268,7 @@ app.put('/tx/confirm', function(req, res){
 			}
 		});
 		//wait until all transactions have been completed
-		while(req.session.user.numberOfTransactionsToConfirm != 0){
+		while(req.session.user.numberOfTransactionsToConfirm > 0){
 			//do nothing until that
 		}
 		//send back something to tell the user everything is all right.
