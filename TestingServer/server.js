@@ -24,7 +24,7 @@ app.use(express.session({
 }));
 
 //setup of the ports & cookie
-var PORT = process.argv[2] ? parseInt(process.argv[2]) : 3000;
+var PORT = process.argv[2] ? parseInt(process.argv[2]) : 3100;
 var ITEM_PORT = 3010;
 var cookie;
 

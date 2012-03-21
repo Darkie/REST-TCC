@@ -18,9 +18,6 @@ TODO:
 	
 	
 	testing attraverso un altro server node che crea richieste e simula di essere un client
-		fare in modo che si logghi, faccia richieste e confermi / cancelli transazioni, ciò significa:
-			- tenere i cookies e prob. mandarli a mano dopo il login
-			- spostare tutto ciò che è nella estenzione che filtra le richieste in node [PARTE DIFFICILE]
 		mettere ItemServer su grid e farlo runnare su un altro processo (chiedere Achille)
 		mettere node-client su grid e runnarlo da li su un altro processo ancora
 

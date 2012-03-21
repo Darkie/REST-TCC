@@ -243,6 +243,8 @@ app.put('/tx/confirm', function(req, res){
 		getTransactions(req.session.user, function(txs){
 			if(txs){
 				console.log(txs);
+				//keep the number of transactions
+				req.session.user.numberOfTransactionsToConfirm = txs.length;
 				//set all transactions to pending, then perform the transaction
 				//if it dies during the process, in the startup it should try it
 				//again and again (same process)
@@ -253,6 +255,8 @@ app.put('/tx/confirm', function(req, res){
 						//do the PUT on the confirmation link
 						execute("PUT", txs[i].confirmation_link, txs[i], function(tx){
 							console.log(tx.uniqueId);
+							//remove one from the total
+							req.session.user.numberOfTransactionsToConfirm = req.session.user.numberOfTransactionsToConfirm - 1;
 							//callback, remove the transaction from the database
 							Transaction.remove({uniqueId : tx.uniqueId}, function(){
 								//do nothing, because it's a loop, impossible to tell 
@@ -263,8 +267,12 @@ app.put('/tx/confirm', function(req, res){
 				});
 			}
 		});
+		//wait until all transactions have been completed
+		while(req.session.user.numberOfTransactionsToConfirm != 0){
+			//do nothing until that
+		}
 		//send back something to tell the user everything is all right.
-		res.send("Transaction performed correctly.");
+		res.send("Transaction performed correctly. (req.session.user.numberOfTransactionsToConfirm = )" + req.session.user.numberOfTransactionsToConfirm);
 	}
 	else
 		console.log("not logged in in confirmation!");
