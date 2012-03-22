@@ -1,6 +1,8 @@
 /* 
-* Server for Cloud TCC
-* Extended with database support (MongoDB & Mongoose)
+* Server for testing CloudServer & BaseServer
+* Contacts CloudServer and logs in. Does some input number
+* of reservations through BaseServer and confirms through
+* CloudServer.
 * @author Masiar Babazadeh 
 * babazadm@usi.ch
 */
@@ -10,10 +12,6 @@ var express  = require('express'),
 	XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
 	querystring = require('querystring'),
 	parse = require('url').parse;
-	
-
-//FOR HTTPS (TODO later)
-//var app = require('express').createServer({ key: ... });
 
 var app = express.createServer();
 app.use(express.logger());
@@ -23,15 +21,14 @@ app.use(express.session({
 	maxAge : new Date(Date.now() + 3600000), //1 hour
 }));
 
-//setup of the ports & cookie
-var PORT = process.argv[2] ? parseInt(process.argv[2]) : 3100;
+//setup of the ports & cookie & number of bookings & random username & random password
+var PORT = process.argv[3] ? parseInt(process.argv[3]) : 3100;
 var ITEM_PORT = 3010;
 var cookie;
-
-//Handles post requests
-app.use(require('connect').bodyParser());
-//Handles put requests
-app.use(express.methodOverride());
+var rndm_username;
+var rndm_password;
+//default of 2 bookings, otherwiser specified input number
+var BOOKINGS = process.argv[2] ? parseInt(process.argv[2]) : 2;
 
 app.listen(PORT);
 
@@ -39,19 +36,40 @@ app.listen(PORT);
 * GET base page, login or register
 */
 app.get('/', function(req, res){
+});
+
+/*
+* Function to register on cloudserver
+*/
+var register = function() {
+	rndm_username = randomString();
+	rndm_password = randomString();
+	var data = querystring.stringify({
+			username: rndm_username,
+			password: rndm_password,
+			email: 'm@l.com',
+		});
+
 	var options = {
-		host: 'cloudservertest.nodester.com',
-		port: 80,
-		path: '/',
-		method: 'GET'
+	    host: 'grid.inf.unisi.ch',
+	    port: 3000,
+	    path: '/register',
+	    method: 'POST',
+	    headers: {
+	        'Content-Type': 'application/x-www-form-urlencoded',
+	        'Content-Length': data.length
+	    }
 	};
-	
-	var req = http.request(options, function(res){
+
+	var req = http.request(options, function(res) {
 		console.log('status: ' + res.statusCode);
-		console.log('headers: ' + JSON.stringify(res.headers));
+		console.log('cookie: ' + JSON.stringify(res.headers["set-cookie"][0]));
+		cookie = res.headers["set-cookie"][0];
 		res.setEncoding('utf8');
-		res.on('data', function(chunk){
-			console.log("body: " + chunk);
+		res.on('data', function (chunk) {
+			//after registration do login
+			console.log("registered with " + rndm_username + " " + rndm_password + " and received " + chunk);
+			login(true);
 		});
 	});
 	
@@ -59,20 +77,28 @@ app.get('/', function(req, res){
 		console.log('problem with request: ' + e.message);
 	});
 
-	// write data to request body
-	req.write('data\n');
-	req.write('data\n');
+	req.write(data);
 	req.end();
-});
+}
 
 /*
 * Function to login on cloudserver
 */
-var login = function() {
-	var data = querystring.stringify({
-			username: 'm',
-			password: 'm',
-		});
+var login = function(registered) {
+	var data;
+	
+	if(registered){
+		data = querystring.stringify({
+				username: rndm_username,
+				password: rndm_password,
+		});	
+	}
+	else {
+		data = querystring.stringify({
+				username: 'm',
+				password: 'm',
+			});
+	}
 
 	var options = {
 	    host: 'grid.inf.unisi.ch',
@@ -92,10 +118,7 @@ var login = function() {
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
 			//after login, do some orders 
-			
-			//XXX: JUST TESTING
-			doOrder(1);
-			
+			doOrders(BOOKINGS);
 		});
 	});
 	
@@ -110,8 +133,16 @@ var login = function() {
 /*
 * Function to do some orders
 */
-var doOrders = function() {
+var doOrders = function(ords) {
 	//call many times doOrder with different ids?
+	for(var i = 0; i < ords; i++){
+		var item_id = Math.floor(Math.random()*4);
+		if(item_id == 0)
+			item_id = 1;
+		console.log("ordering item " + item_id);
+		doOrder(item_id);
+	}
+	setTimeout(function(){confirm();}, 2000);
 }
 
 /*
@@ -216,7 +247,6 @@ var sendDataToCloud = function(receivedData){
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
 			console.log(chunk);
-			deleteTransaction(receivedData.uniqueIdTx);
 		});
 	});
 	
@@ -246,6 +276,8 @@ var confirm = function() {
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
 			console.log(chunk);
+			app.close();
+			process.exit(1);
 		});
 	});
 	
@@ -289,6 +321,21 @@ var deleteTransaction = function(item_id){
 }
 
 /*
+* This function generates a random string. Useful for generating
+* random username and password for testing.
+*/
+var randomString = function() {
+	var chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+	var string_length = 5;
+	var randomstring = '';
+	for (var i=0; i<string_length; i++) {
+		var rnum = Math.floor(Math.random() * chars.length);
+		randomstring += chars.substring(rnum,rnum+1);
+	}
+	return randomstring;
+}
+
+/*
 * Test code to run the code as soon as the server is started
 */
-login();
+register();
