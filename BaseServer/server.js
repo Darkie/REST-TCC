@@ -22,7 +22,7 @@ app.set('view engine', 'ejs');
 app.set("view options", { layout: true });
 
 //setup of the timeout & port
-var PORT = process.argv[2] ? parseInt(process.argv[2]) : 3000;
+var PORT = process.argv[2] ? parseInt(process.argv[2]) : 3010;
 var TIMEOUT = process.argv[3] ? parseInt(process.argv[3]) : 86400000;
 
 //Handles post requests
@@ -52,7 +52,9 @@ app.get('/', function(req, res){
 * items.
 */
 app.get('/admin', function(req, res){
-	res.render(__dirname + '/pages/add_objects.jade', {});
+	res.render(__dirname + '/pages/add_objects.jade', {
+		port : PORT,
+	});
 });
 
 /*
@@ -68,7 +70,9 @@ app.post('/admin', function(req, res){
 	saveItem(newItem);
 	
 	//send back the adding page
-	res.render(__dirname + '/pages/add_objects.jade', {});
+	res.render(__dirname + '/pages/add_objects.jade', {
+		port: PORT,
+	});
 });
 
 /*
@@ -118,6 +122,7 @@ app.get('/item/:item_no', function(req, res){
 */
 app.post('/item/:item_no', function(req, res){
 	//check if item exists/retrieve it from db
+	//console.log("in post item/item_no");
 	findItem(req.params.item_no, function(item){
 		if(item){
 			if(item.inStock > 0){
@@ -125,9 +130,9 @@ app.post('/item/:item_no', function(req, res){
 				if(req.header('Accept').indexOf("+tcc") != -1){
 					//making up confirmation link
 					//first: uniqueid
-					//timestamp used because it's impossible to have two equal ids
+					//timestamp + random used because it's impossible to have two equal ids
 					//and it's impossible to make up an id up to the millisecond precision
-					var uniqueId = new Date().getTime();
+					var uniqueId = new Date().getTime() + "-" + Math.floor(Math.random()*100000) + "-" + Math.floor(Math.random()*100000) + "-" + Math.floor(Math.random()*100000);
 					//then link
 					var confLink = "<http://"+req.headers.host+"/buy/" + req.params.item_no + "/XTCC?id="+uniqueId+">; rel=\"confirm\"";
 					//then deadline
@@ -142,7 +147,7 @@ app.post('/item/:item_no', function(req, res){
 							//reserve the item
 							modifyStockCount(req.params.item_no, false, function(err){
 								if(!err){
-									console.log("modified stock count");
+									//console.log("modified stock count");
 									
 									//setTimeout for the deadline (only now when saved on db)
 									setTimeout(function() {
@@ -154,7 +159,7 @@ app.post('/item/:item_no', function(req, res){
 													//delete the transaction for that item
 													removeTransaction(uniqueId, function(err){
 														if(!err){
-															console.log("cancel transaction due to timeout");
+															//console.log("cancel transaction due to timeout");
 														}
 														else
 															console.log(err);
@@ -212,7 +217,7 @@ app.get('/buy/:item_no/XTCC', function(req, res){
 			getItemName(req.params.item_no, function(itemName){
 				//if JSON asked
 				if(req.accepts('application/json')){
-					console.log("JSON ASKED");
+					//console.log("JSON ASKED");
 					var jsonResponse = {
 						uri: confLink,
 						deadline: tx.timeout,
@@ -221,12 +226,14 @@ app.get('/buy/:item_no/XTCC', function(req, res){
 						uniqueIdTx : tx.uniqueId,
 					};
 					response = JSON.stringify(jsonResponse);
+					//console.log(response);
 				}
 				else if(req.accepts('application/xml')){
 					//if XML asked
-					console.log("XML asked");
+					//console.log("XML asked");
 					response = "<payment><uri>"+confLink+"</uri> <deadline>"+tx.timeout+"</deadline> <title>Item: " + itemName + "</title> <rel>confirm</rel></payment>";
 				}
+				//console.log("sending response");
 				res.send(response);
 			});
 		}
@@ -249,7 +256,7 @@ app.delete('/buy/:item_no/XTCC', function(req, res){
 		//delete the transaction for that item
 		removeTransaction(uniqueId, function(err){
 			if(!err){
-				console.log("DELETE method to cancel transaction");
+				//console.log("DELETE method to cancel transaction");
 				res.send('ok', 200);
 			}
 			else
@@ -267,16 +274,27 @@ app.delete('/buy/:item_no/XTCC', function(req, res){
 app.put('/buy/:item_no/XTCC', function(req, res){
 	var uniqueId = req.query.id;
 	//in-stock count already decreased by the POST action
-	//just remove the transaction and so something for the payment
-	removeTransaction(uniqueId, function(err){
-		if(!err){
-			console.log("PUT payment has been done for uniqueId " + uniqueId);
-			res.send('ok', 200);
-			//do something for the payment
-			//do something for sending the item to the buyer
+	//check that it has not timed out
+	findTransaction(uniqueId, function(tx){
+		if(tx){
+			//just remove the transaction and so something for the payment
+			removeTransaction(uniqueId, function(err){
+				if(!err){
+					//only here we are sure we have been correctly done the transaction
+					console.log("PUT payment has been done for uniqueId " + uniqueId);
+					res.send('ok', 200);
+					//do something for the payment
+					//do something for sending the item to the buyer
+				}
+				else
+					console.log(err);
+			});
 		}
-		else
-			console.log(err);
+		else {
+			//transaction was not found, probably timoeut
+			console.log("this tx: " + uniqueId + " already timeouted or already payed");
+			res.send('ok', 206);
+		}
 	});
 });
 
@@ -297,11 +315,11 @@ var checkUniqueness = function(newId){
   		} 
   		else { 
 			if(tx){
-				console.log("not unique")
+				//console.log("not unique")
 				return false;
 			}
 			else{
-				console.log("unique")
+				//console.log("unique")
 				return true;
 			}
   		}
@@ -400,11 +418,11 @@ var saveItem = function(newItem){
 				else {
 					//set it into the item
 					newItem.uniqueId = items[0].uniqueId + 1;
-					console.log(items);
+					//console.log(items);
 				}
 				//save the item
 				newItem.save(function (err) {
-					console.log("Item saved!");
+					//console.log("Item saved!");
 				});
 			}
 		});

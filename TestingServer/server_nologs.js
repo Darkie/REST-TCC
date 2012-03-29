@@ -13,30 +13,18 @@ var express  = require('express'),
 	querystring = require('querystring'),
 	parse = require('url').parse;
 
-var app = express.createServer();
-app.use(express.logger());
-app.use(express.cookieParser());
-app.use(express.session({ 
-	secret: 'keyboard cat',
-	maxAge : new Date(Date.now() + 3600000), //1 hour
-}));
-
-//setup of the ports & cookie & number of bookings & random username & random password
-var PORT = process.argv[3] ? parseInt(process.argv[3]) : 3100;
+//setup of some variables
 var ITEM_PORT = 3010;
 var cookie;
 var rndm_username;
 var rndm_password;
-//default of 2 bookings, otherwiser specified input number
 var BOOKINGS = process.argv[2] ? parseInt(process.argv[2]) : 2;
-
-app.listen(PORT);
-
-/*
-* GET base page, login or register
-*/
-app.get('/', function(req, res){
-});
+var PORT = process.argv[3] ? parseInt(process.argv[3]) : 3100;
+var CLIENT_NMR = process.argv[4] ? parseInt(process.argv[4]) : 0;
+//variables for computing time
+var START_AFTER_REGISTRATION;
+var START_AFTER_RESERVATIONS;
+var END;
 
 /*
 * Function to register on cloudserver
@@ -129,14 +117,13 @@ var login = function(registered) {
 * Function to do some orders
 */
 var doOrders = function(ords) {
+	START_AFTER_REGISTRATION = new Date().getTime();
 	//call many times doOrder with different ids?
 	for(var i = 0; i < ords; i++){
-		var item_id = Math.floor(Math.random()*4);
-		if(item_id == 0)
-			item_id = 1;
+		var item_id = Math.floor(Math.random() * 3) + 1;
+		
 		doOrder(item_id);
 	}
-	setTimeout(function(){confirm();}, 2000);
 }
 
 /*
@@ -156,6 +143,7 @@ var doOrder = function(item_id){
 
 	var req = http.request(options, function(res) {
 		res.setEncoding('utf8');
+		
 		res.on('data', function (chunk) {
 			//have to check if the headers contain 'Link' and 'XTCC'
 			if(res.headers["link"] && res.headers["link"].indexOf("XTCC") != -1){
@@ -199,17 +187,36 @@ var getInfoForItem = function(uri) {
 	http.get(options, function(res) {
 		res.setEncoding('utf8');
 		res.on('data', function(chunk){
-			chunk = JSON.parse(chunk);
-			//store data and/or send it directly to CloudServer
-			var receivedData = {
-				confirmationLink: chunk.uri,
-				deadline: chunk.deadline,
-				title: chunk.title,
-				uniqueIdTx : chunk.uniqueIdTx,
-			};
-			
-			sendDataToCloud(receivedData);
+			if(chunk == "Wrong transaction number"){
+				console.log("Wrong transaction number for client_nmr " + CLIENT_NMR);
+			}
+			else{
+				chunk = JSON.parse(chunk);
+				//store data and/or send it directly to CloudServer
+				var receivedData = {
+					confirmationLink: chunk.uri,
+					deadline: chunk.deadline,
+					title: chunk.title,
+					uniqueIdTx : chunk.uniqueIdTx,
+				};
+
+				sendDataToCloud(receivedData);
+			}
 		});
+		
+		//XXX: not working
+		//on end, decrease bookings variable
+		res.on('end', function(e){
+			BOOKINGS = BOOKINGS - 1;
+			if(BOOKINGS == 0){
+				setTimeout(function(){
+					START_AFTER_RESERVATIONS = new Date().getTime();
+					confirm();
+				}, 2000);
+			}
+		});
+		
+		
 	}).on('error', function(e) {
 		console.log("Got error: " + e.message);
 	});
@@ -265,8 +272,16 @@ var confirm = function() {
 	var req = http.request(options, function(res) {
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
-			console.log(chunk);
-			app.close();
+			END = new Date().getTime();
+			var total_time = END - START_AFTER_REGISTRATION;
+			var confirm_time = END - START_AFTER_RESERVATIONS;
+			if(chunk == "all_ok"){
+				console.log("CID"+CLIENT_NMR+",all_ok,"+total_time+","+confirm_time);
+			}
+			else{
+				//console.log(chunk);
+				console.log("CID#"+CLIENT_NMR+","+chunk+","+total_time+","+confirm_time);
+			}
 			process.exit(1);
 		});
 	});
@@ -315,7 +330,7 @@ var deleteTransaction = function(item_id){
 */
 var randomString = function() {
 	var chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-	var string_length = 5;
+	var string_length = 10;
 	var randomstring = '';
 	for (var i=0; i<string_length; i++) {
 		var rnum = Math.floor(Math.random() * chars.length);

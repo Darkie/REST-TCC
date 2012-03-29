@@ -1,11 +1,9 @@
 #!/bin/bash
 
-echo "hi, $USER!"
-
 cd ../../node/ 
-port=3100
+port=4100
 for (( c=1; c<=$2; c++ ))
 do
-	port=$((port+100))
-	./node ../REST-TCC/TestingServer/server.js $1 $port &
+	port=$((port+10))
+	numactl --cpubind=0 --membind=0 ./node ../REST-TCC/TestingServer/server_nologs.js $1 $port $c &
 done

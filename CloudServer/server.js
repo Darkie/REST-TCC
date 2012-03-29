@@ -50,14 +50,14 @@ app.get('/', function(req, res){
 	if(req.session.user){
 		//directly get the transactions
 		getTransactions(req.session.user, function(txs){
-			console.log(txs);
+			//console.log(txs);
 			if(txs == undefined){
 				res.render(__dirname + '/pages/base.jade', {
 					transactions : null,
 				});
 			}
 			else {
-				console.log("TRANSACTIONSSSSS " + txs);
+				//console.log("TRANSACTIONSSSSS " + txs);
 				res.render(__dirname + '/pages/base.jade', {
 					transactions : txs,
 				});
@@ -77,7 +77,7 @@ app.post('/register', function(req, res){
 	newUser.username = req.body.username;
 	newUser.password = req.body.password;
 	newUser.email = req.body.email;
-	console.log("here");
+	//console.log("here");
 	newUser.save(function (err) {
 		if(err)
 			console.log(err);
@@ -97,7 +97,7 @@ app.post('/login', function(req, res){
 	user.password = req.body.password;
 	checkLogin(user, function(foundUser){
 		//login correct
-		console.log("login!");
+		//console.log("login!");
 		req.session.user = foundUser;
 		getTransactions(req.session.user, function(txs){
 			if(txs == undefined){
@@ -109,7 +109,7 @@ app.post('/login', function(req, res){
 				for(var i = 0; i < txs.length; i++){
 					console.log(delete txs[i]["_id"]);
 				}
-				console.log("TRANSACTIONSSSSS " + txs);
+				//console.log("TRANSACTIONSSSSS " + txs);
 				res.render(__dirname + '/pages/base.jade', {
 					transactions : txs,
 				});
@@ -125,8 +125,8 @@ app.post('/login', function(req, res){
 */
 app.get('/tx', function(req, res){
 	getTransactions(req.session.user, function(txs){
-		console.log("found transactions: ");
-		console.log(txs);
+		//console.log("found transactions: ");
+		//console.log(txs);
 		res.render(__dirname + '/pages/base.jade', {
 			transactions : txs,
 		});
@@ -144,7 +144,7 @@ app.get('/tx', function(req, res){
 app.post('/addTransaction', function(req, res){
 	//check if user is logged in
 	if(req.session.user){
-		console.log("in add transaction");
+		//console.log("in add transaction");
 		//get transaction data
 		var tx = req.body;
 		//save it in the database
@@ -155,11 +155,11 @@ app.post('/addTransaction', function(req, res){
 		trns.confirmation_link = tx.confirmationLink;
 		trns.uniqueId = tx.uniqueIdTx;
 		trns.pending = false;
-		console.log("transaction to be added: " + trns);
+		//console.log("transaction to be added: " + trns);
 		//create a timeout from the deadline minus the current time, which
 		//gives the number of milliseconds after w	hich the timeout will expire
 		var to = tx.deadline - (new Date().getTime());
-		console.log(to);
+		//console.log(to);
 		if(to > 0){
 			trns.save(function(err){
 				if(err)
@@ -173,7 +173,7 @@ app.post('/addTransaction', function(req, res){
 								//transaction still there, it has timeout, remove it
 								Transaction.remove({uniqueId : tx.uniqueId}, function(){
 									//do something?
-									console.log("timeout! transaction removed from the cloud :(");
+									//console.log("timeout! transaction removed from the cloud :(");
 								});
 							}
 						});
@@ -183,7 +183,7 @@ app.post('/addTransaction', function(req, res){
 			res.send("success?", 200);
 			}
 		else{
-			console.log("RECEIVED SOMETHING OLD");
+			//console.log("RECEIVED SOMETHING OLD");
 			res.send("old", 200);
 		}
 	}
@@ -201,7 +201,7 @@ app.post('/addTransaction', function(req, res){
 * from the database.
 */
 app.delete('/tx/delete/:uniqueId', function(req, res){
-	console.log("delete with uniqueId = " + req.params.uniqueId);
+	//console.log("delete with uniqueId = " + req.params.uniqueId);
 	if(req.session.user){
 		findTransaction(req.params.uniqueId, function(tx){
 			if(tx){
@@ -238,41 +238,51 @@ app.delete('/tx/delete/:uniqueId', function(req, res){
 * particular user (the one currently logged in).
 */
 app.put('/tx/confirm', function(req, res){
-	console.log("confirm clicked!");
+	//console.log("confirm clicked!");
 	if(req.session.user){
 		getTransactions(req.session.user, function(txs){
 			if(txs){
-				console.log(txs);
+				//console.log(txs);
 				//keep the number of transactions
 				req.session.user.numberOfTransactionsToConfirm = txs.length;
+				//console.log("just setted numberOfTransactionsToConfirm = " + req.session.user.numberOfTransactionsToConfirm);
 				//set all transactions to pending, then perform the transaction
 				//if it dies during the process, in the startup it should try it
 				//again and again (same process)
+				req.session.user.someTimeout = 0;
 				setAllPending(req.session.user, function(){
 					//if the user has transactions to confirm, confirm them all
 					for(var i = 0; i < txs.length; i++){
-						console.log(txs[i].uniqueId);
+						//console.log(txs[i].uniqueId);
 						//do the PUT on the confirmation link
-						execute("PUT", txs[i].confirmation_link, txs[i], function(tx){
-							console.log(tx.uniqueId);
+						execute("PUT", txs[i].confirmation_link, txs[i], function(tx, isTimeout){
 							//remove one from the total
 							req.session.user.numberOfTransactionsToConfirm = req.session.user.numberOfTransactionsToConfirm - 1;
+							//console.log("just removed one, now is " + req.session.user.numberOfTransactionsToConfirm);
 							//callback, remove the transaction from the database
 							Transaction.remove({uniqueId : tx.uniqueId}, function(){
-								//do nothing, because it's a loop, impossible to tell 
-								//which callback will be called.
+								//console.log("Delete! Is timeout: " + isTimeout);
+								if(isTimeout){
+									req.session.user.someTimeout = req.session.user.someTimeout + 1;
+								}
+								//if counter reaches 0, all transactions executed, send result
+								if(req.session.user.numberOfTransactionsToConfirm == 0){
+									if(req.session.user.someTimeout != 0){
+										//send back something to tell the user everything is all right.
+										res.send("some_timeout_" + req.session.user.someTimeout);
+										req.session.user.someTimeout = 0;
+									}
+									else{
+										//send back something to tell the user everything is all right.
+										res.send("all_ok");
+									}
+								}
 							});
 						});
 					}
 				});
 			}
 		});
-		//wait until all transactions have been completed
-		while(req.session.user.numberOfTransactionsToConfirm > 0){
-			//do nothing until that
-		}
-		//send back something to tell the user everything is all right.
-		res.send("Transaction performed correctly. (req.session.user.numberOfTransactionsToConfirm = )" + req.session.user.numberOfTransactionsToConfirm);
 	}
 	else
 		console.log("not logged in in confirmation!");
@@ -286,7 +296,7 @@ app.put('/tx/confirm', function(req, res){
 * database, the callback is executed.
 */
 var checkLogin = function(user, callback){
-	console.log(user);
+	//console.log(user);
 	User.findOne({"username" : user.username, "password" : user.password}, function(err, user) {
 		if (err) {
 			console.log(err);
@@ -307,7 +317,7 @@ var checkLogin = function(user, callback){
 */
 var getTransactions = function(user, callback){
 	Transaction.find({username : user.username}, { '_id': 0, 'uniqueId' :1, 'timeout': 1, 'confirmation_link': 1, 'item_name': 1}, function(err, txs){
-		console.log("user : " + user.username + " with txs: " + txs);
+		//console.log("user : " + user.username + " with txs: " + txs);
 		callback(txs);
 	});
 }
@@ -346,9 +356,9 @@ var execute = function(method, url, tx, callback, time){
 	xmlhttp.open(method, url, true);
 	
 	xmlhttp.onreadystatechange = function() {
-	    if (xmlhttp.readyState == 4 && xmlhttp.status != 200)  {
+	    if (xmlhttp.readyState == 4 && xmlhttp.status != 200 && xmlhttp.status != 206)  {
 			// Handle error, retry DELETE or PUT in exponential way
-			console.log("problem! And i = " + time + " and url " + url + " and xmlhttp.status = " + xmlhttp.status + " and xmlhttp.readyState = " + xmlhttp.readyState);
+			//console.log("problem! And i = " + time + " and url " + url + " and xmlhttp.status = " + xmlhttp.status + " and xmlhttp.readyState = " + xmlhttp.readyState);
 			// Calls execute(method, url, i*2) after i milliseconds.
 			setTimeout(execute, time, method, url, tx, callback, time*2);
 			return;
@@ -356,7 +366,14 @@ var execute = function(method, url, tx, callback, time){
 		
 		else if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
 			//everything went better than expected, execute callback
+			//console.log("RECEIVED 200");
 			callback(tx);
+		}
+		
+		else if (xmlhttp.readyState == 4 && xmlhttp.status == 206){
+			//everything went better than expected, execute callback
+			//console.log("RECEIVED 206");
+			callback(tx, true);
 		}
 	};
 	
@@ -373,7 +390,7 @@ var setAllPending = function(user, callback){
 		if(err)
 			console.log(err);
 		
-		console.log("saved all pending transactions");
+		//console.log("saved all pending transactions");
 		callback();
 	});
 }
@@ -387,14 +404,14 @@ var setAllPending = function(user, callback){
 */
 var setDeadlineTimouts = function(){
 	//get all the transactions in the database
-	console.log("setting up the timeouts in setDeadlineTimeouts");
+	//console.log("setting up the timeouts in setDeadlineTimeouts");
 	Transaction.find({}, function(err, txs){
-		console.log("found these transactions to check " + txs);
+		//console.log("found these transactions to check " + txs);
 		//iterates through the transactions
 		for(var i = 0; i < txs.length; i++){
 			//check if the timeout has already expired
 			if(new Date().getTime() > txs[i].timeout){
-				console.log("EXPIRED!");
+				//console.log("EXPIRED!");
 				//expired, delete the transaction
 				Transaction.remove({uniqueId : txs[i].uniqueId}, function(){
 					//do something here too?
@@ -403,7 +420,7 @@ var setDeadlineTimouts = function(){
 			else if(txs[i].pending){
 				//transaction in pending, should be execute (since has not timeout yet)
 				execute("PUT", txs[i].confirmation_link, txs[i], function(tx){
-					console.log("found transaction with id : " + tx.uniqueId + " to be committed");
+					//console.log("found transaction with id : " + tx.uniqueId + " to be committed");
 					//callback, remove the transaction from the database
 					Transaction.remove({uniqueId : tx.uniqueId}, function(){
 						//do nothing, because it's a loop, impossible to tell 
@@ -419,13 +436,13 @@ var setDeadlineTimouts = function(){
 				console.log("will expire in " + to);
 				(
 					function(i) {
-						console.log("SET TIMEOUT");
+						//console.log("SET TIMEOUT");
 						setTimeout(function() {
 							//delete the transaction, first check if it has not been already committed
 							findTransaction(txs[i].uniqueId, function(tx){
-								console.log("search transaction to delete")
+								//console.log("search transaction to delete")
 								if(tx){
-									console.log("found transaction to delete: " + tx)
+									//console.log("found transaction to delete: " + tx)
 									//transaction still there, it has timeout, remove it
 									Transaction.remove({uniqueId : tx.uniqueId}, function(){
 										//do something?
