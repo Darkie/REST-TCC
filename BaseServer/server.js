@@ -24,6 +24,7 @@ app.set("view options", { layout: true });
 //setup of the timeout & port
 var PORT = process.argv[2] ? parseInt(process.argv[2]) : 3010;
 var TIMEOUT = process.argv[3] ? parseInt(process.argv[3]) : 86400000;
+var SOCKET_TIMEOUT = 1200000;
 
 //Handles post requests
 app.use(require('connect').bodyParser());
@@ -123,6 +124,7 @@ app.get('/item/:item_no', function(req, res){
 app.post('/item/:item_no', function(req, res){
 	//check if item exists/retrieve it from db
 	//console.log("in post item/item_no");
+	req.connection.setTimeout(SOCKET_TIMEOUT);
 	findItem(req.params.item_no, function(item){
 		if(item){
 			if(item.inStock > 0){
@@ -206,6 +208,7 @@ app.post('/item/:item_no', function(req, res){
 app.get('/buy/:item_no/XTCC', function(req, res){
 	//take the unique id and check in the db if it exists
 	//a transaction with that id.
+	req.connection.setTimeout(SOCKET_TIMEOUT);
 	var uniqueId = req.query.id;
 	findTransaction(uniqueId, function(tx){
 		if(tx){
@@ -272,6 +275,7 @@ app.delete('/buy/:item_no/XTCC', function(req, res){
 * TODO: something for payment & sending item.
 */
 app.put('/buy/:item_no/XTCC', function(req, res){
+	req.connection.setTimeout(SOCKET_TIMEOUT);
 	var uniqueId = req.query.id;
 	//in-stock count already decreased by the POST action
 	//check that it has not timed out

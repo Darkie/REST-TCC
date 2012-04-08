@@ -1,0 +1,100 @@
+CID6,all_ok,10072,6663
+CID21,all_ok,25547,22032
+CID12,all_ok,42487,38189
+CID8,all_ok,43376,36267
+CID4,all_ok,43629,30850
+CID2,all_ok,44491,30254
+CID46,all_ok,45352,13344
+CID96,all_ok,46522,13358
+CID90,all_ok,47784,14546
+CID61,all_ok,48988,15784
+CID93,all_ok,50207,17012
+CID99,all_ok,101094,67892
+CID35,all_ok,102390,69109
+CID97,all_ok,103466,70272
+CID98,all_ok,104674,71146
+CID3,all_ok,106312,71999
+CID92,all_ok,107335,72912
+CID100,all_ok,108572,73788
+CID18,all_ok,109528,73341
+CID25,all_ok,110729,74550
+CID31,all_ok,111617,74455
+CID34,all_ok,113065,75521
+CID23,all_ok,114213,76373
+CID27,all_ok,115241,77525
+CID51,all_ok,116499,78556
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up

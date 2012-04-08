@@ -30,6 +30,7 @@ app.set("view options", { layout: true });
 //setup of the timeout & port
 var PORT = process.argv[2] ? parseInt(process.argv[2]) : 3000;
 var TIMEOUT = process.argv[3] ? parseInt(process.argv[3]) : 86400000;
+var SOCKET_TIMEOUT = 1200000;
 
 //Handles post requests
 app.use(require('connect').bodyParser());
@@ -142,6 +143,7 @@ app.get('/tx', function(req, res){
 * similar)
 */
 app.post('/addTransaction', function(req, res){
+	req.connection.setTimeout(SOCKET_TIMEOUT);
 	//check if user is logged in
 	if(req.session.user){
 		//console.log("in add transaction");
@@ -238,6 +240,7 @@ app.delete('/tx/delete/:uniqueId', function(req, res){
 * particular user (the one currently logged in).
 */
 app.put('/tx/confirm', function(req, res){
+	req.connection.setTimeout(SOCKET_TIMEOUT);
 	//console.log("confirm clicked!");
 	if(req.session.user){
 		getTransactions(req.session.user, function(txs){

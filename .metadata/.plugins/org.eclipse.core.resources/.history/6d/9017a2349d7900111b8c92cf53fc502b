@@ -1,0 +1,7 @@
+
+public class Point {
+	private long timeBeforeInfo;
+	private long timeAfterInfo;
+	private int transactionTimeouts;
+	private int connectionTimeouts;
+}

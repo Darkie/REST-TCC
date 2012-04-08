@@ -1,0 +1,37 @@
+
+public class Point {
+	private int transactions;
+	private int clients;
+	private int timeoutTime;
+	
+	private long timeBeforeInfo;
+	private long timeAfterInfo;
+	private int transactionTimeouts;
+	private int connectionTimeouts;
+	
+	
+	public long getTimeBeforeInfo() {
+		return timeBeforeInfo;
+	}
+	public void setTimeBeforeInfo(long timeBeforeInfo) {
+		this.timeBeforeInfo = timeBeforeInfo;
+	}
+	public long getTimeAfterInfo() {
+		return timeAfterInfo;
+	}
+	public void setTimeAfterInfo(long timeAfterInfo) {
+		this.timeAfterInfo = timeAfterInfo;
+	}
+	public int getTransactionTimeouts() {
+		return transactionTimeouts;
+	}
+	public void setTransactionTimeouts(int transactionTimeouts) {
+		this.transactionTimeouts = transactionTimeouts;
+	}
+	public int getConnectionTimeouts() {
+		return connectionTimeouts;
+	}
+	public void setConnectionTimeouts(int connectionTimeouts) {
+		this.connectionTimeouts = connectionTimeouts;
+	}
+}

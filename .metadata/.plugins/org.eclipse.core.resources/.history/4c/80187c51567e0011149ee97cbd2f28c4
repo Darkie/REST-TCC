@@ -1,0 +1,127 @@
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+/**
+ * @author Masiar
+ * This class reads a CSV file generated from the tests
+ * and chunks its values to make some assumptions and 
+ * output a PGFPlot-compliant text to be used in the thesis
+ * report and maybe a pubbication.
+ */
+public class Reader {
+
+	private static ArrayList<Point> points = new ArrayList<Point>();
+
+	/**
+	 * @param args contains the path of the files to be analyzed.
+	 * The main method takes the files containing all the dump
+	 * information from the tests.
+	 */
+	public static void main(String[] args) {
+		File dir = new File(args[0]);
+		String[] children = dir.list();
+		if (children == null) {
+			// Either dir does not exist or is not a directory
+			System.out.println("children == null");
+		} else {
+			for (int i=0; i<children.length; i++) {
+				// Get filename of file or directory
+				String filename = children[i];
+				read_second(args[0] + "/" + filename);
+			}
+		}
+		
+
+		// It is also possible to filter the list of returned files.
+		// This example does not return any files that start with `.'.
+		FilenameFilter filter = new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				return !name.startsWith(".");
+			}
+		};
+		children = dir.list(filter);
+
+
+		// The list of files can also be retrieved as File objects
+		File[] files = dir.listFiles();
+
+		// This filter only returns directories
+		FileFilter fileFilter = new FileFilter() {
+			public boolean accept(File file) {
+				return file.isDirectory();
+			}
+		};
+		files = dir.listFiles(fileFilter);
+	}
+
+	/*
+	 * Read the file passed as filename
+	 */
+	public static void read_second(String filename){
+		String thisLine;
+		try {
+			// Open the file that is the first 
+			// command line parameter
+			int timeBeforeInfo = 0;
+			int timeAfterInfo = 0;
+			int transactionTimeouts = 0;
+			int connectionTimeouts = 0;
+
+			//get timeout/clients/reservations
+			String[] result = filename.split("_");
+			//0 = to, 2 = cli, 4 = res
+			String timeout = result[0].substring(result[0].indexOf("/") + 1, result[0].length());
+			String clients = result[2];
+			String reservations = result[4];
+
+			Point p = new Point(Integer.parseInt(reservations), Integer.parseInt(clients), Integer.parseInt(timeout));
+
+			FileInputStream fin =  new FileInputStream(filename);
+			// JDK1.1+
+			BufferedReader myInput = new BufferedReader
+					(new InputStreamReader(fin));
+
+			while ((thisLine = myInput.readLine()) != null) {  
+				String[] lineSplitted = thisLine.split(",");
+				//0 = PID / 1 = timeout or not / 2 = time before infoget / 3 = time before confirm
+
+				//check if general timeout
+				if(thisLine.equals("problem with request: connect ETIMEDOUT") || thisLine.equals("problem with request: socket hang up")){
+					//even though now I should handle these
+					connectionTimeouts++;
+					continue;
+				}
+
+				if(thisLine.startsWith("Wrong transaction")){
+					transactionTimeouts++;
+					continue;
+				}
+
+				//add times
+				timeBeforeInfo = timeBeforeInfo + Integer.parseInt(lineSplitted[2]);
+				timeAfterInfo = timeAfterInfo + Integer.parseInt(lineSplitted[3]);
+
+				//check if some transactions timed out
+				if(!lineSplitted[1].equals("all_ok")){
+					String[] notAllOk = lineSplitted[1].split("_");
+					//in theory 2 = number that timeouted
+					transactionTimeouts = transactionTimeouts + Integer.parseInt(notAllOk[2]);
+				}
+			}
+			p.setSumTimeAfterInfo(timeAfterInfo);
+			p.setSumTimeBeforeInfo(timeBeforeInfo);
+			p.setTransactionTimeouts(transactionTimeouts);
+			p.setConnectionTimeouts(connectionTimeouts);
+			
+			points.add(p);
+		}catch (Exception e){//Catch exception if any
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+}

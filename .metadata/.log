@@ -1,0 +1,48 @@
+!SESSION 2012-03-29 11:10:23.698 -----------------------------------------------
+eclipse.buildId=M20110909-1335
+java.version=1.6.0_29
+java.vendor=Apple Inc.
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/Masiar/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/Masiar/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2012-03-29 11:11:44.977
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY org.scala-ide.sdt.core 2 0 2012-03-29 11:12:28.476
+!MESSAGE Couldnt find a match for 2.9.2.r25964-b20111108034957 in . Using default.
+
+!ENTRY org.eclipse.ui.workbench 2 0 2012-03-29 11:12:41.582
+!MESSAGE A handler conflict occurred.  This may disable some commands.
+!SUBENTRY 1 org.eclipse.ui.workbench 2 0 2012-03-29 11:12:41.582
+!MESSAGE Conflict for 'AUTOGEN:::org.eclipse.ui.cheatsheets.actionSet/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction':
+HandlerActivation(commandId=AUTOGEN:::org.eclipse.ui.cheatsheets.actionSet/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction,
+	handler=ActionDelegateHandlerProxy(null,org.eclipse.ui.cheatsheets.CheatSheetExtensionFactory:helpMenuAction),
+	expression=AndExpression(ActionSetExpression(org.eclipse.ui.cheatsheets.actionSet,org.eclipse.ui.internal.WorkbenchWindow@75157f77),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@75157f77)),sourcePriority=16640)
+HandlerActivation(commandId=AUTOGEN:::org.eclipse.ui.cheatsheets.actionSet/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction,
+	handler=ActionDelegateHandlerProxy(null,org.eclipse.ui.cheatsheets.CheatSheetExtensionFactory:helpMenuAction),
+	expression=AndExpression(ActionSetExpression(org.eclipse.ui.cheatsheets.actionSet,org.eclipse.ui.internal.WorkbenchWindow@75157f77),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@75157f77)),sourcePriority=16640)
+!SESSION 2012-04-04 13:58:02.974 -----------------------------------------------
+eclipse.buildId=M20110909-1335
+java.version=1.6.0_29
+java.vendor=Apple Inc.
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/Masiar/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/Masiar/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2012-04-04 13:58:25.954
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY org.scala-ide.sdt.core 2 0 2012-04-04 13:58:43.573
+!MESSAGE Couldnt find a match for 2.9.2.r25964-b20111108034957 in . Using default.
+
+!ENTRY org.eclipse.ui.workbench 2 0 2012-04-04 13:58:57.933
+!MESSAGE A handler conflict occurred.  This may disable some commands.
+!SUBENTRY 1 org.eclipse.ui.workbench 2 0 2012-04-04 13:58:57.933
+!MESSAGE Conflict for 'AUTOGEN:::org.eclipse.ui.cheatsheets.actionSet/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction':
+HandlerActivation(commandId=AUTOGEN:::org.eclipse.ui.cheatsheets.actionSet/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction,
+	handler=ActionDelegateHandlerProxy(null,org.eclipse.ui.cheatsheets.CheatSheetExtensionFactory:helpMenuAction),
+	expression=AndExpression(ActionSetExpression(org.eclipse.ui.cheatsheets.actionSet,org.eclipse.ui.internal.WorkbenchWindow@5eb41276),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@5eb41276)),sourcePriority=16640)
+HandlerActivation(commandId=AUTOGEN:::org.eclipse.ui.cheatsheets.actionSet/org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction,
+	handler=ActionDelegateHandlerProxy(null,org.eclipse.ui.cheatsheets.CheatSheetExtensionFactory:helpMenuAction),
+	expression=AndExpression(ActionSetExpression(org.eclipse.ui.cheatsheets.actionSet,org.eclipse.ui.internal.WorkbenchWindow@5eb41276),WorkbenchWindowExpression(org.eclipse.ui.internal.WorkbenchWindow@5eb41276)),sourcePriority=16640)

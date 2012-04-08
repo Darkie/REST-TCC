@@ -1,0 +1,986 @@
+CID9,all_ok,2028,10
+CID2,all_ok,2022,10
+CID4,all_ok,2466,11
+CID7,all_ok,2207,13
+CID5,all_ok,2194,9
+CID200,all_ok,2904,7
+CID429,all_ok,2717,8
+CID80,all_ok,2022,9
+CID784,all_ok,3728,11
+CID785,all_ok,4653,11
+CID357,all_ok,4529,1877
+CID131,all_ok,4412,1924
+CID122,all_ok,4311,1676
+CID234,all_ok,4652,1657
+CID263,all_ok,4175,1597
+CID323,all_ok,4158,1627
+CID269,all_ok,4542,1604
+CID297,all_ok,4263,1679
+CID327,all_ok,4187,1600
+CID972,all_ok,4097,1558
+CID590,all_ok,4250,1589
+CID627,all_ok,4164,1606
+CID360,all_ok,4560,1619
+CID176,all_ok,4187,1606
+CID210,all_ok,4411,1538
+CID334,all_ok,4244,1293
+CID166,all_ok,4487,1566
+CID270,all_ok,4340,1320
+CID198,all_ok,4265,1367
+CID294,all_ok,4311,1362
+CID629,all_ok,4145,1380
+CID276,all_ok,4368,1384
+CID561,all_ok,4167,1398
+CID622,all_ok,4225,1400
+CID193,all_ok,4203,1410
+CID345,all_ok,3857,1418
+CID187,all_ok,4368,1425
+CID151,all_ok,4242,1444
+CID361,all_ok,4246,1452
+CID247,all_ok,4471,1469
+CID128,all_ok,5266,1463
+CID593,all_ok,4931,1467
+CID598,all_ok,3871,1505
+CID586,all_ok,3868,1498
+CID639,all_ok,3864,1479
+CID215,all_ok,4425,1468
+CID965,all_ok,3746,1483
+CID172,all_ok,4117,1478
+CID609,all_ok,3874,1499
+CID283,all_ok,4285,1201
+CID922,all_ok,4084,1211
+CID318,all_ok,4214,1265
+CID301,all_ok,3750,1258
+CID944,all_ok,3766,1260
+CID226,all_ok,4784,1278
+CID125,all_ok,4080,1314
+CID941,all_ok,3388,1291
+CID308,all_ok,4304,1284
+CID281,all_ok,4334,1321
+CID257,all_ok,4174,1278
+CID238,all_ok,3397,1292
+CID164,all_ok,4918,1280
+CID311,all_ok,4282,1346
+CID129,all_ok,4444,1347
+CID317,all_ok,4418,1350
+CID272,all_ok,4547,1302
+CID237,all_ok,4270,1366
+CID304,all_ok,4167,1262
+CID227,all_ok,4176,1254
+CID126,all_ok,4209,1320
+CID555,all_ok,3767,1267
+CID309,all_ok,4157,1254
+CID185,all_ok,4195,1257
+CID558,all_ok,3180,900
+CID312,all_ok,3778,1359
+CID637,all_ok,3175,905
+CID564,all_ok,3554,910
+CID280,all_ok,4230,914
+CID904,all_ok,3396,927
+CID943,all_ok,3228,930
+CID155,all_ok,3200,1049
+CID191,all_ok,4070,1134
+CID919,all_ok,3799,1154
+CID118,all_ok,4134,1037
+CID580,all_ok,3790,1034
+CID158,all_ok,4235,1047
+CID300,all_ok,4366,1097
+CID578,all_ok,3399,964
+CID620,all_ok,3417,1020
+CID960,all_ok,3799,1057
+CID625,all_ok,3228,1105
+CID250,all_ok,4281,1111
+CID184,all_ok,3575,1075
+CID236,all_ok,3441,1018
+CID575,all_ok,3813,1109
+CID556,all_ok,3222,1079
+CID583,all_ok,3806,1140
+CID346,all_ok,4375,1098
+CID220,all_ok,4489,1196
+CID252,all_ok,3947,1073
+CID196,all_ok,4227,1089
+CID213,all_ok,4155,1118
+CID938,all_ok,3236,1095
+CID174,all_ok,4229,1203
+CID582,all_ok,3248,1138
+CID955,all_ok,3826,1137
+CID333,all_ok,3830,1212
+CID573,all_ok,3433,970
+CID970,all_ok,3958,1058
+CID178,all_ok,3961,981
+CID255,all_ok,4339,983
+CID337,all_ok,3620,978
+CID322,all_ok,3833,986
+CID953,all_ok,3806,983
+CID295,all_ok,4027,992
+CID964,all_ok,3286,992
+CID349,all_ok,4359,1215
+CID320,all_ok,3813,995
+CID221,all_ok,4215,1105
+CID136,all_ok,4352,1007
+CID261,all_ok,3836,1002
+CID619,all_ok,3841,1000
+CID566,all_ok,3977,1211
+CID932,all_ok,3815,1025
+CID133,all_ok,4227,1027
+CID560,all_ok,3833,1024
+CID249,all_ok,3295,1026
+CID642,all_ok,3299,1065
+CID602,all_ok,3293,1036
+CID949,all_ok,3836,1040
+CID618,all_ok,3496,1089
+CID959,all_ok,3860,1095
+CID159,all_ok,3472,1069
+CID597,all_ok,3870,1166
+CID211,all_ok,3341,767
+CID962,all_ok,3530,1137
+CID306,all_ok,3678,787
+CID188,all_ok,3354,785
+CID256,all_ok,4452,776
+CID584,all_ok,3354,804
+CID929,all_ok,3721,796
+CID599,all_ok,3342,821
+CID222,all_ok,3707,808
+CID279,all_ok,3901,929
+CID218,all_ok,3347,846
+CID324,all_ok,3365,859
+CID588,all_ok,3722,857
+CID288,all_ok,3931,949
+CID633,all_ok,4120,906
+CID110,all_ok,3718,895
+CID946,all_ok,3926,936
+CID553,all_ok,3535,834
+CID115,all_ok,3734,929
+CID603,all_ok,3947,871
+CID292,all_ok,3371,902
+CID568,all_ok,4371,979
+CID621,all_ok,3042,1013
+CID343,all_ok,3577,1059
+CID314,all_ok,3374,874
+CID262,all_ok,3728,906
+CID613,all_ok,3046,1024
+CID626,all_ok,3560,964
+CID353,all_ok,3051,1026
+CID942,all_ok,4385,985
+CID581,all_ok,3051,1029
+CID614,all_ok,4083,1063
+CID328,all_ok,3718,1068
+CID325,all_ok,3952,955
+CID248,all_ok,3396,944
+CID936,all_ok,3591,1038
+CID120,all_ok,3953,964
+CID259,all_ok,4605,1074
+CID926,all_ok,3393,934
+CID933,all_ok,3585,1012
+CID289,all_ok,3667,1088
+CID186,all_ok,3973,1089
+CID948,all_ok,3385,1014
+CID924,all_ok,3423,1024
+CID214,all_ok,3078,1046
+CID563,all_ok,3599,1020
+CID302,all_ok,3082,1050
+CID921,all_ok,3430,1014
+CID173,all_ok,3989,1025
+CID562,all_ok,3601,1043
+CID282,all_ok,3617,1043
+CID291,all_ok,3995,1042
+CID264,all_ok,3778,1053
+CID607,all_ok,4156,1100
+CID546,all_ok,3442,1036
+CID197,all_ok,3986,1104
+CID918,all_ok,2972,662
+CID731,all_ok,2977,680
+CID931,all_ok,3410,683
+CID254,all_ok,2856,674
+CID204,all_ok,2983,683
+CID316,all_ok,2976,692
+CID571,all_ok,2982,689
+CID770,all_ok,2985,699
+CID640,all_ok,2986,697
+CID113,all_ok,2985,702
+CID67,all_ok,2986,705
+CID116,all_ok,2987,708
+CID570,all_ok,3091,710
+CID610,all_ok,3112,740
+CID911,all_ok,3125,741
+CID121,all_ok,3140,739
+CID565,all_ok,3151,739
+CID624,all_ok,3120,734
+CID638,all_ok,3136,751
+CID585,all_ok,3127,754
+CID298,all_ok,3503,772
+CID617,all_ok,3118,758
+CID277,all_ok,3159,781
+CID647,all_ok,3149,792
+CID952,all_ok,3150,790
+CID616,all_ok,3145,787
+CID628,all_ok,3462,799
+CID947,all_ok,3154,799
+CID251,all_ok,3164,796
+CID206,all_ok,3509,833
+CID348,all_ok,3480,830
+CID321,all_ok,4067,841
+CID916,all_ok,3506,843
+CID239,all_ok,3517,846
+CID245,all_ok,3524,839
+CID631,all_ok,3172,865
+CID119,all_ok,3177,866
+CID398,all_ok,3708,875
+CID615,all_ok,3171,868
+CID632,all_ok,3175,877
+CID557,all_ok,3182,889
+CID344,all_ok,3181,906
+CID216,all_ok,3182,909
+CID935,all_ok,3540,917
+CID961,all_ok,3512,890
+CID572,all_ok,2604,576
+CID153,all_ok,3162,581
+CID548,all_ok,3195,651
+CID592,all_ok,3156,617
+CID643,all_ok,2767,573
+CID939,all_ok,2602,572
+CID265,all_ok,2274,254
+CID858,all_ok,2276,253
+CID950,all_ok,2277,255
+CID753,all_ok,2141,117
+CID541,all_ok,2279,257
+CID763,all_ok,2138,118
+CID162,all_ok,2280,257
+CID705,all_ok,2147,121
+CID721,all_ok,2144,118
+CID909,all_ok,2146,119
+CID652,all_ok,2131,111
+CID900,all_ok,2145,115
+CID937,all_ok,2132,111
+CID59,all_ok,2059,46
+CID540,all_ok,2059,44
+CID701,all_ok,2061,47
+CID168,all_ok,2134,112
+CID984,all_ok,2091,8
+CID912,all_ok,2115,9
+CID650,all_ok,2130,20
+CID698,all_ok,2151,38
+CID517,all_ok,2149,38
+CID717,all_ok,2151,38
+CID988,all_ok,2157,47
+CID758,all_ok,2157,47
+CID995,all_ok,2158,47
+CID757,all_ok,2163,51
+CID711,all_ok,2165,49
+CID315,all_ok,2165,49
+CID58,all_ok,2165,50
+CID440,all_ok,2169,52
+CID660,all_ok,2169,52
+CID528,all_ok,2168,57
+CID846,all_ok,2171,56
+CID987,all_ok,2172,58
+CID710,all_ok,2171,55
+CID654,all_ok,2173,57
+CID702,all_ok,2172,58
+CID850,all_ok,2172,58
+CID466,all_ok,2172,54
+CID505,all_ok,2173,54
+CID519,all_ok,2170,55
+CID663,all_ok,2171,57
+CID670,all_ok,2173,58
+CID651,all_ok,2173,59
+CID993,all_ok,3912,1727
+CID167,all_ok,3909,1726
+CID963,all_ok,3909,1728
+CID511,all_ok,3910,1725
+CID484,all_ok,3911,1728
+CID852,all_ok,4166,1983
+CID370,all_ok,4167,1982
+CID542,all_ok,4164,1988
+CID413,all_ok,4172,1988
+CID488,all_ok,4164,1989
+CID111,all_ok,4564,2387
+CID730,all_ok,4564,2387
+CID748,all_ok,4565,2387
+CID529,all_ok,4566,2390
+CID662,all_ok,4566,2389
+CID707,all_ok,4638,2463
+CID982,all_ok,4640,2467
+CID740,all_ok,4637,2464
+CID864,all_ok,4640,2466
+CID973,all_ok,4641,2465
+CID735,all_ok,4661,2490
+CID467,all_ok,4662,2515
+CID123,all_ok,4661,2488
+CID479,all_ok,4658,2486
+CID699,all_ok,4661,2487
+CID897,all_ok,4678,2505
+CID907,all_ok,4675,2507
+CID712,all_ok,4680,2505
+CID750,all_ok,4680,2508
+CID384,all_ok,4682,2510
+CID756,all_ok,4685,2523
+CID351,all_ok,4684,2521
+CID715,all_ok,4685,2524
+CID771,all_ok,4690,2545
+CID747,all_ok,4499,2370
+CID762,all_ok,4690,2529
+CID825,all_ok,4502,2368
+CID860,all_ok,4505,2370
+CID447,all_ok,4512,2381
+CID509,all_ok,4515,2381
+CID781,all_ok,4515,2382
+CID482,all_ok,4523,2398
+CID464,all_ok,4515,2385
+CID142,all_ok,4525,2400
+CID839,all_ok,4522,2399
+CID997,all_ok,4524,2401
+CID739,all_ok,4525,2403
+CID534,all_ok,4526,2404
+CID189,all_ok,4526,2387
+CID547,all_ok,4531,2408
+CID338,all_ok,7978,5364
+CID867,all_ok,4525,2390
+CID500,all_ok,4527,2388
+CID52,all_ok,4260,1899
+CID851,all_ok,4529,2393
+CID502,all_ok,4267,1900
+CID910,all_ok,4268,1904
+CID506,all_ok,4532,2394
+CID51,all_ok,4269,1907
+CID499,all_ok,4273,1910
+CID976,all_ok,4275,1911
+CID526,all_ok,4272,1909
+CID669,all_ok,4275,1913
+CID431,all_ok,4274,1917
+CID445,all_ok,4301,2011
+CID895,all_ok,4277,1919
+CID887,all_ok,4300,2058
+CID513,all_ok,4301,2017
+CID285,all_ok,4306,2019
+CID689,all_ok,4288,1929
+CID870,all_ok,4306,2018
+CID906,all_ok,4288,1931
+CID749,all_ok,4287,1932
+CID459,all_ok,4281,1936
+CID22,all_ok,4281,1938
+CID303,all_ok,4281,1938
+CID130,all_ok,4284,1941
+CID76,all_ok,4284,1940
+CID539,all_ok,4312,1974
+CID866,all_ok,4312,1975
+CID544,all_ok,4315,1978
+CID893,all_ok,4316,1979
+CID903,all_ok,4316,1981
+CID545,all_ok,4318,1985
+CID29,all_ok,4318,1984
+CID809,all_ok,4329,2010
+CID821,all_ok,4327,2009
+CID905,all_ok,4325,2012
+CID106,all_ok,4330,2016
+CID476,all_ok,4329,2018
+CID278,all_ok,4330,2017
+CID968,all_ok,4333,2019
+CID787,all_ok,4335,2021
+CID205,all_ok,4337,2023
+CID512,all_ok,4336,2025
+CID885,all_ok,4339,2028
+CID496,all_ok,4340,2028
+CID419,all_ok,4346,2032
+CID981,all_ok,4346,2039
+CID794,all_ok,4345,2039
+CID228,all_ok,4344,2042
+CID508,all_ok,4346,2041
+CID520,all_ok,4353,2103
+CID886,all_ok,4334,1973
+CID530,all_ok,4357,2152
+CID841,all_ok,4337,1978
+CID378,all_ok,4335,1975
+CID849,all_ok,4337,1982
+CID872,all_ok,4363,2157
+CID379,all_ok,4336,1982
+CID543,all_ok,4364,2075
+CID421,all_ok,4364,2116
+CID842,all_ok,4345,1985
+CID472,all_ok,4368,2081
+CID667,all_ok,4368,2082
+CID140,all_ok,4336,1905
+CID498,all_ok,4336,1906
+CID769,all_ok,4339,1906
+CID165,all_ok,4344,1911
+CID424,all_ok,4345,1911
+CID415,all_ok,4344,1914
+CID12,all_ok,4350,1914
+CID845,all_ok,4345,1917
+CID11,all_ok,4352,1922
+CID801,all_ok,4351,1922
+CID432,all_ok,4362,1925
+CID425,all_ok,4355,1926
+CID380,all_ok,4355,1926
+CID18,all_ok,4093,1803
+CID416,all_ok,4091,1807
+CID91,all_ok,4093,1805
+CID138,all_ok,4097,1806
+CID14,all_ok,4107,1811
+CID393,all_ok,4117,1826
+CID28,all_ok,4119,1833
+CID847,all_ok,2754,742
+CID736,all_ok,2753,742
+CID696,all_ok,2787,775
+CID175,all_ok,4131,1845
+CID700,all_ok,2787,776
+CID554,all_ok,6291,3793
+CID569,all_ok,6196,3800
+CID551,all_ok,6304,3820
+CID648,all_ok,5915,3828
+CID635,all_ok,6295,3819
+CID954,all_ok,5929,3828
+CID550,all_ok,6656,3828
+CID645,all_ok,6206,3833
+CID945,all_ok,5926,3842
+CID601,all_ok,5933,3852
+CID579,all_ok,6216,3850
+CID600,all_ok,5937,3853
+CID608,all_ok,6209,3853
+CID688,all_ok,2866,853
+CID697,all_ok,2873,861
+CID576,all_ok,5944,3865
+CID605,all_ok,5942,3864
+CID940,all_ok,5944,3868
+CID266,all_ok,6354,3876
+CID108,all_ok,5956,3886
+CID636,all_ok,5956,3873
+CID725,all_ok,2905,889
+CID661,all_ok,2653,633
+CID678,all_ok,2657,634
+CID8,all_ok,2662,642
+CID679,all_ok,2666,648
+CID93,all_ok,2377,367
+CID726,all_ok,2667,647
+CID448,all_ok,2665,650
+CID686,all_ok,2388,374
+CID844,all_ok,2169,114
+CID891,all_ok,2169,114
+CID983,all_ok,2169,102
+CID478,all_ok,2169,104
+CID881,all_ok,2172,105
+CID507,all_ok,2174,101
+CID957,all_ok,2173,100
+CID518,all_ok,2165,61
+CID84,all_ok,2166,60
+CID664,all_ok,2170,62
+CID985,all_ok,2171,68
+CID990,all_ok,2174,65
+CID746,all_ok,2172,63
+CID549,all_ok,2174,66
+CID491,all_ok,2172,69
+CID772,all_ok,2173,69
+CID671,all_ok,2043,29
+CID956,all_ok,2044,31
+CID914,all_ok,2044,28
+CID658,all_ok,2043,29
+CID181,all_ok,2117,9
+CID751,all_ok,2117,8
+CID980,all_ok,2150,8
+CID840,all_ok,2178,14
+CID892,all_ok,2178,14
+CID104,all_ok,2181,16
+CID915,all_ok,2180,13
+CID495,all_ok,2181,15
+CID843,all_ok,2203,18
+CID456,all_ok,2204,17
+CID490,all_ok,2205,18
+CID492,all_ok,2213,24
+CID494,all_ok,2213,24
+CID874,all_ok,2215,27
+CID684,all_ok,2218,27
+CID74,all_ok,2216,27
+CID709,all_ok,2217,28
+CID826,all_ok,2217,27
+CID501,all_ok,2216,27
+CID672,all_ok,5139,3012
+CID515,all_ok,2230,10
+CID373,all_ok,2228,11
+CID461,all_ok,5164,3035
+CID385,all_ok,5165,3035
+CID468,all_ok,5162,3032
+CID99,all_ok,5165,3031
+CID796,all_ok,5164,3032
+CID190,all_ok,5172,3042
+CID444,all_ok,5175,3043
+CID818,all_ok,5176,3048
+CID483,all_ok,5183,3047
+CID394,all_ok,5188,3051
+CID835,all_ok,2264,48
+CID504,all_ok,5179,3051
+CID436,all_ok,5188,3053
+CID510,all_ok,2283,66
+CID810,all_ok,2283,63
+CID516,all_ok,2283,63
+CID313,all_ok,2284,64
+CID879,all_ok,5198,3069
+CID497,all_ok,5218,3082
+CID179,all_ok,2318,83
+CID764,all_ok,2319,82
+CID473,all_ok,2312,83
+CID377,all_ok,2319,84
+CID875,all_ok,2330,97
+CID882,all_ok,2334,97
+CID474,all_ok,2332,99
+CID873,all_ok,2334,100
+CID996,all_ok,2369,137
+CID453,all_ok,2366,138
+CID417,all_ok,2372,138
+CID884,all_ok,2372,138
+CID917,all_ok,2369,138
+CID894,all_ok,2411,186
+CID908,all_ok,2410,164
+CID783,all_ok,2414,188
+CID612,all_ok,2421,188
+CID861,all_ok,2416,190
+CID804,all_ok,2473,226
+CID532,all_ok,2472,228
+CID112,all_ok,2471,228
+CID363,all_ok,2467,228
+CID834,all_ok,2476,229
+CID901,all_ok,2595,351
+CID390,all_ok,2593,350
+CID674,all_ok,2593,352
+CID890,all_ok,2594,352
+CID859,all_ok,2590,353
+CID480,all_ok,2689,442
+CID656,all_ok,2686,444
+CID743,all_ok,2687,443
+CID397,all_ok,2687,443
+CID733,all_ok,2683,444
+CID778,all_ok,2737,495
+CID446,all_ok,2753,513
+CID481,all_ok,2754,514
+CID401,all_ok,2756,516
+CID704,all_ok,2750,499
+CID452,all_ok,2761,515
+CID898,all_ok,2747,498
+CID979,all_ok,2746,501
+CID889,all_ok,2749,500
+CID862,all_ok,2750,503
+CID738,all_ok,2764,518
+CID524,all_ok,2765,518
+CID883,all_ok,2765,520
+CID470,all_ok,2766,519
+CID449,all_ok,2765,519
+CID673,all_ok,2781,535
+CID438,all_ok,2278,184
+CID975,all_ok,2275,183
+CID182,all_ok,2276,183
+CID855,all_ok,2493,364
+CID127,all_ok,2493,366
+CID493,all_ok,2283,190
+CID223,all_ok,2285,197
+CID489,all_ok,2286,197
+CID95,all_ok,2285,197
+CID68,all_ok,2288,197
+CID160,all_ok,2293,204
+CID800,all_ok,2295,205
+CID880,all_ok,2294,206
+CID727,all_ok,2296,208
+CID462,all_ok,2294,207
+CID49,all_ok,2303,213
+CID734,all_ok,2302,217
+CID65,all_ok,2304,217
+CID706,all_ok,2305,216
+CID977,all_ok,2304,216
+CID767,all_ok,2489,285
+CID998,all_ok,2488,287
+CID657,all_ok,2486,286
+CID659,all_ok,2492,289
+CID994,all_ok,2490,288
+CID741,all_ok,2493,294
+CID896,all_ok,2496,294
+CID971,all_ok,2495,296
+CID837,all_ok,2496,297
+CID692,all_ok,2498,297
+CID109,all_ok,2503,302
+CID680,all_ok,2501,302
+CID527,all_ok,2502,304
+CID716,all_ok,2503,307
+CID728,all_ok,2504,306
+CID857,all_ok,2508,309
+CID978,all_ok,2506,309
+CID420,all_ok,2510,312
+CID145,all_ok,2510,312
+CID163,all_ok,2512,319
+CID414,all_ok,2524,323
+CID986,all_ok,2524,322
+CID169,all_ok,2525,323
+CID372,all_ok,2515,325
+CID722,all_ok,2516,325
+CID683,all_ok,2514,329
+CID691,all_ok,2545,331
+CID876,all_ok,2521,333
+CID180,all_ok,2544,334
+CID830,all_ok,2549,348
+CID194,all_ok,2550,345
+CID418,all_ok,2552,346
+CID407,all_ok,2550,346
+CID792,all_ok,2551,346
+CID752,all_ok,2553,358
+CID475,all_ok,2556,360
+CID776,all_ok,2556,361
+CID811,all_ok,2554,352
+CID442,all_ok,2556,355
+CID703,all_ok,2530,350
+CID790,all_ok,2563,388
+CID745,all_ok,2533,350
+CID969,all_ok,2564,390
+CID682,all_ok,2532,351
+CID441,all_ok,2553,359
+CID386,all_ok,2565,360
+CID381,all_ok,2568,394
+CID681,all_ok,2539,358
+CID819,all_ok,2555,359
+CID369,all_ok,2571,365
+CID355,all_ok,2572,368
+CID820,all_ok,2572,369
+CID768,all_ok,2571,366
+CID30,all_ok,2576,370
+CID437,all_ok,5544,3162
+CID433,all_ok,5552,3160
+CID427,all_ok,5552,3165
+CID863,all_ok,5550,3163
+CID114,all_ok,5550,3167
+CID823,all_ok,5549,3166
+CID537,all_ok,5559,3169
+CID395,all_ok,5560,3173
+CID666,all_ok,5564,3176
+CID838,all_ok,5559,3178
+CID848,all_ok,5560,3178
+CID831,all_ok,5565,3183
+CID428,all_ok,5568,3184
+CID455,all_ok,5564,3181
+CID402,all_ok,5565,3180
+CID854,all_ok,5565,3180
+CID290,all_ok,5571,3188
+CID50,all_ok,5568,3182
+CID275,all_ok,5579,3195
+CID813,all_ok,5574,3185
+CID423,all_ok,5578,3196
+CID991,all_ok,2210,7
+CID808,all_ok,2256,7
+CID124,all_ok,2340,28
+CID102,all_ok,2346,33
+CID170,all_ok,2351,39
+CID201,all_ok,2350,39
+CID72,all_ok,2351,39
+CID974,all_ok,2355,41
+CID258,all_ok,2353,42
+CID81,all_ok,2360,44
+CID107,all_ok,2357,44
+CID412,all_ok,2360,45
+CID799,all_ok,2359,44
+CID376,all_ok,2361,45
+CID25,all_ok,2382,33
+CID695,all_ok,2381,34
+CID802,all_ok,2380,32
+CID383,all_ok,2384,35
+CID775,all_ok,2390,44
+CID522,all_ok,2388,44
+CID195,all_ok,2390,46
+CID836,all_ok,2397,48
+CID243,all_ok,2396,52
+CID43,all_ok,2396,50
+CID101,all_ok,2399,52
+CID98,all_ok,2402,54
+CID687,all_ok,2400,49
+CID260,all_ok,2408,57
+CID305,all_ok,2408,55
+CID146,all_ok,2420,74
+CID35,all_ok,2419,75
+CID103,all_ok,2431,75
+CID85,all_ok,2433,74
+CID253,all_ok,2435,75
+CID105,all_ok,2432,74
+CID774,all_ok,2432,76
+CID359,all_ok,2443,84
+CID71,all_ok,2441,83
+CID24,all_ok,2443,84
+CID117,all_ok,2434,84
+CID88,all_ok,2444,84
+CID777,all_ok,2442,91
+CID340,all_ok,2448,81
+CID94,all_ok,2443,82
+CID368,all_ok,2446,85
+CID366,all_ok,2448,86
+CID877,all_ok,2454,92
+CID40,all_ok,2457,93
+CID408,all_ok,2450,85
+CID358,all_ok,2453,93
+CID44,all_ok,2451,88
+CID815,all_ok,2457,92
+CID83,all_ok,2462,92
+CID42,all_ok,2456,93
+CID10,all_ok,2456,91
+CID157,all_ok,2457,93
+CID144,all_ok,2459,96
+CID362,all_ok,2456,87
+CID149,all_ok,2457,86
+CID82,all_ok,2456,87
+CID450,all_ok,2458,89
+CID86,all_ok,2461,91
+CID34,all_ok,2455,94
+CID46,all_ok,2454,94
+CID36,all_ok,2465,94
+CID147,all_ok,2460,99
+CID342,all_ok,2459,86
+CID350,all_ok,2466,94
+CID822,all_ok,2467,93
+CID143,all_ok,2470,92
+CID231,all_ok,2467,94
+CID803,all_ok,2470,98
+CID73,all_ok,2472,100
+CID137,all_ok,2469,98
+CID463,all_ok,2469,99
+CID60,all_ok,2474,100
+CID310,all_ok,2474,102
+CID57,all_ok,2470,98
+CID225,all_ok,2479,107
+CID219,all_ok,2476,107
+CID595,all_ok,2476,106
+CID69,all_ok,2478,107
+CID577,all_ok,2477,108
+CID795,all_ok,2202,110
+CID38,all_ok,2203,110
+CID97,all_ok,2209,106
+CID77,all_ok,2207,116
+CID364,all_ok,2209,118
+CID212,all_ok,2211,109
+CID207,all_ok,2212,109
+CID134,all_ok,2215,87
+CID273,all_ok,2212,87
+CID454,all_ok,2212,89
+CID406,all_ok,2214,91
+CID791,all_ok,2217,92
+CID156,all_ok,2220,95
+CID202,all_ok,2218,99
+CID90,all_ok,2218,100
+CID824,all_ok,2225,103
+CID457,all_ok,2223,104
+CID865,all_ok,2225,105
+CID806,all_ok,2225,108
+CID371,all_ok,2226,111
+CID240,all_ok,2232,112
+CID32,all_ok,2230,115
+CID458,all_ok,2231,115
+CID319,all_ok,2236,119
+CID404,all_ok,2237,121
+CID332,all_ok,2240,122
+CID460,all_ok,2240,125
+CID786,all_ok,2239,125
+CID789,all_ok,2240,128
+CID435,all_ok,2246,132
+CID871,all_ok,2245,131
+CID148,all_ok,2249,135
+CID410,all_ok,2246,136
+CID217,all_ok,2248,138
+CID514,all_ok,2035,14
+CID833,all_ok,2036,15
+CID797,all_ok,2036,16
+CID78,all_ok,2037,19
+CID356,all_ok,2039,15
+CID31,all_ok,2041,17
+CID224,all_ok,2040,16
+CID828,all_ok,2049,13
+CID538,all_ok,2051,13
+CID465,all_ok,2050,12
+CID232,all_ok,2054,15
+CID477,all_ok,2054,16
+CID409,all_ok,2082,7
+CID150,all_ok,2084,9
+CID21,all_ok,2094,13
+CID434,all_ok,2102,18
+CID405,all_ok,2101,18
+CID79,all_ok,2101,20
+CID814,all_ok,2102,20
+CID788,all_ok,2102,21
+CID469,all_ok,2105,20
+CID89,all_ok,2119,43
+CID177,all_ok,2121,45
+CID61,all_ok,2123,48
+CID208,all_ok,2124,48
+CID132,all_ok,2124,48
+CID782,all_ok,2125,48
+CID230,all_ok,2126,49
+CID913,all_ok,2125,49
+CID203,all_ok,2127,48
+CID139,all_ok,2127,50
+CID780,all_ok,2126,52
+CID816,all_ok,2127,50
+CID422,all_ok,2040,7
+CID375,all_ok,2050,10
+CID827,all_ok,2065,22
+CID503,all_ok,2065,22
+CID487,all_ok,2069,25
+CID374,all_ok,2070,25
+CID533,all_ok,2069,23
+CID39,all_ok,2069,25
+CID400,all_ok,2073,27
+CID451,all_ok,2077,29
+CID779,all_ok,2077,27
+CID878,all_ok,2079,30
+CID135,all_ok,2079,32
+CID523,all_ok,2079,29
+CID246,all_ok,11887,9238
+CID723,all_ok,2028,12
+CID902,all_ok,2028,11
+CID899,all_ok,2031,12
+CID754,all_ok,2022,11
+CID41,all_ok,2021,10
+CID235,all_ok,2022,9
+CID798,all_ok,2024,9
+CID56,all_ok,2028,12
+CID242,all_ok,2028,12
+CID45,all_ok,2033,16
+CID15,all_ok,2033,15
+CID55,all_ok,2035,16
+CID241,all_ok,2036,16
+CID999,all_ok,2075,13
+CID724,all_ok,2074,12
+CID930,all_ok,2074,12
+CID719,all_ok,2086,15
+CID649,all_ok,2086,16
+CID299,all_ok,2088,15
+CID720,all_ok,2090,17
+CID675,all_ok,2100,20
+CID773,all_ok,2100,21
+CID760,all_ok,2101,21
+CID718,all_ok,2106,25
+CID646,all_ok,2119,28
+CID521,all_ok,2118,28
+CID853,all_ok,2117,29
+CID486,all_ok,2124,37
+CID665,all_ok,2125,37
+CID1000,all_ok,2128,40
+CID744,all_ok,2128,42
+CID668,all_ok,2127,39
+CID471,all_ok,2127,42
+CID714,all_ok,2131,43
+CID676,all_ok,2128,44
+CID765,all_ok,2131,45
+CID64,all_ok,2090,30
+CID677,all_ok,2136,34
+CID17,all_ok,2091,34
+CID233,all_ok,2095,33
+CID330,all_ok,2088,29
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up
+problem with request: socket hang up

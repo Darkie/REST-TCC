@@ -25,7 +25,7 @@ var CLIENT_NMR = process.argv[4] ? parseInt(process.argv[4]) : 0;
 var START_AFTER_REGISTRATION;
 var START_AFTER_RESERVATIONS;
 var END;
-
+var SOCKET_TIMEOUT = 1200000;
 /*
 * Function to register on cloudserver
 */
@@ -158,6 +158,8 @@ var doOrder = function(item_id){
 		});
 	});
 	
+	req.setTimeout(SOCKET_TIMEOUT);
+	
 	req.on('error', function(e) {
 		console.log('problem with request: ' + e.message);
 	});
@@ -219,7 +221,7 @@ var getInfoForItem = function(uri) {
 		
 	}).on('error', function(e) {
 		console.log("Got error: " + e.message);
-	});
+	}).setTimeout(SOCKET_TIMEOUT);
 }
 
 /*
@@ -250,6 +252,8 @@ var sendDataToCloud = function(receivedData){
 	req.on('error', function(e) {
 		console.log('problem with request: ' + e.message);
 	});
+	
+	req.setTimeout(SOCKET_TIMEOUT);
 
 	req.write(data);
 	req.end();
@@ -285,6 +289,8 @@ var confirm = function() {
 			process.exit(1);
 		});
 	});
+	
+	req.setTimeout(SOCKET_TIMEOUT);
 	
 	req.on('error', function(e) {
 		console.log('problem with request: ' + e.message);
