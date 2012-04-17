@@ -2,6 +2,9 @@
 // Crawler service handler declaration
 //
 
+//handler for TCC & TXmanager
+var tccHandler = require('./tcc');
+var txm = require('./txmanager');
 
 var http = require('http');
 http.createServer(function (__req, __res) {
@@ -65,7 +68,7 @@ http.createServer(function (__req, __res) {
     //      '/fibo'
     //
 
-    // -- global symbols -- MODIFIED + ADDED SOMETHINF
+    // -- global symbols -- MODIFIED + ADDED SOMETHING
     var schedulerClass = {};
     var SSS = {};
     // -- global control flow management --
@@ -78,12 +81,14 @@ http.createServer(function (__req, __res) {
 	__scheduler.emit = function(){};
 	__scheduler.execOn = function(){};
 	__scheduler.exec = function(){};
+	//my stuff added for tcc
+	var txmanager = new txm.TXManager();
+	txmanager.__init();
 
     //
     //      on GET { ... }
     //
     if (__req.method == 'GET') {
-
         var ON1 = {} 
         var ON0 = {} 
         var ON1 = {} 
@@ -97,15 +102,18 @@ http.createServer(function (__req, __res) {
 				//invece di exports.resourceManagerClass creare mia classe / whatever
 				//per handlare TCC (ovvero quello che ho già fatto, fa spostato solo
 				//in una classe a se che risponda con questi metodi e che prenda un __event)
-                L.aRes_0 = new exports.resourceManagerClass.Resource()
+                /*L.aRes_0 = new exports.resourceManagerClass.Resource()
                 L.aRes_0.__init(exports.conf, __scheduler, __commScheduler, exports.__skPool, exports.__channelID, 'www.google.com', __uid)
-                L.aRes_0.get__start(__event)
+                L.aRes_0.get__start(__event)*/
+				L.aRes_0 = new tccHandler.TCC();
+                L.aRes_0.__init(txmanager, 'http://grid.inf.unisi.ch:3010/item/2');
+                L.aRes_0.reserve(__event);
             }
         var IF_1 = function(__event, __comingFromEvent, __r) {
                 L.tmpR_0 = L.aRes_0.get__result()
                 ON1.a = L.tmpR_0
                 L.aRes_1 = new exports.resourceManagerClass.Resource()
-                L.aRes_1.__init(exports.conf, __scheduler, __commScheduler, exports.__skPool, exports.__channelID, 'www.a.b', __uid)
+                L.aRes_1.__init(exports.conf, __scheduler, __commScheduler, exports.__skPool, exports.__channelID, 'www.google.it', __uid)
                 L.aRes_1.get__start(__event)
             }
         var IF_2 = function(__event, __comingFromEvent, __r) {
@@ -120,11 +128,11 @@ http.createServer(function (__req, __res) {
                 __res.end(__end);
                 __scheduler.emit(__event);
             }
-
-        __scheduler.execOn('done_F_2'+__ls+__u, function() { __scheduler.emit('done_B_0'+__ls+__u) });
-        __scheduler.execOn('done_F_1'+__ls+__u, IF_2, 'done_F_2'+__ls+__u);
+        __scheduler.execOn('done_F_2'+__ls+__u, function() { txmanager.confirm(); __scheduler.emit('done_B_0'+__ls+__u) });
+		__scheduler.execOn('done_F_1'+__ls+__u, IF_2, 'done_F_2'+__ls+__u);
         __scheduler.execOn('done_F_0'+__ls+__u, IF_1, 'done_F_1'+__ls+__u);
         __scheduler.exec(IF_0, 'done_F_0'+__ls+__u);
+		console.log("sotto exec");
     }
   })
 }).listen(1337, '127.0.0.1');
