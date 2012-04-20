@@ -13,68 +13,82 @@ var express  = require('express'),
 
 var exports = module.exports;
 
-exports.init = function(app, initialCallback, uri, dbUri, t, afterReservationCallback, deleteCallback, finalCallback){
+exports.init = function(app, uri, dbUri, t, afterReservationCallback, deleteCallback, finalCallback){
 	exports.timeout = t;
 	
 	var db = mongoose.connect(dbUri);
 	var Transaction = db.model('Transaction');
+	var identifiers = parseUri(uri);
 	
 	//POST handler (reservation)
 	app.post(uri, function(req, res){
-		initialCallback(function() {
-			if(req.header('Accept').indexOf("+tcc") != -1){
-				//making up confirmation link
-				//first: uniqueid
-				//timestamp + random used because it's impossible to have two equal ids
-				//and it's impossible to make up an id up to the millisecond precision
-				var uniqueId = new Date().getTime() + "-" + Math.floor(Math.random()*100000) + "-" + Math.floor(Math.random()*100000) + "-" + Math.floor(Math.random()*100000);
-				//then link
-				var confLink = "<http://"+req.headers.host+ uri + "/XTCC?id="+uniqueId+">; rel=\"confirm\"";
-				//then deadline
-				var timestamp = new Date().getTime() + exports.timeout;
-				//save everything in the database
-				var trns = new Transaction();
-				trns.uniqueId = uniqueId;
-				trns.timeout = timestamp;
-				trns.item_no = req.params.item_no;
-				trns.save(function (err) {
-					if (!err){
-						//reserve the item
-						afterReservationCallback();
-						console.log(uniqueId);
-						//setTimeout for the deadline (only now when saved on db)
-						setTimeout(function() {
-							//delete the transaction, first check if it has not been already committed
-							findTransaction(uniqueId, function(tx){
-								if(tx){
-									console.log("tx : " + tx);
-									removeTransaction(uniqueId, function(err){
-										if(!err){
-											console.log("timeout expired");
-											deleteCallback();
-										}
-										else{
-											console.log(err);
-										}
-									});
-								}
-							});
-						}, exports.timeout - 1000); // fired 1 sec before reservation is deleted
-						
-						//send only confLink, GET PUT and DELETE will do the rest
-						res.header('Link', confLink);
-						//send something meaningful that shows that the item has been reserved
-						res.send("TCC! sent confirmation link in Link header");
-					}
-					else {
-						console.log(err);
-					}
-				});
+		if(req.header('Accept').indexOf("+tcc") != -1){
+			//making up confirmation link
+			//first: uniqueid
+			//timestamp + random used because it's impossible to have two equal ids
+			//and it's impossible to make up an id up to the millisecond precision
+			var uniqueId = new Date().getTime() + "-" + Math.floor(Math.random()*100000) + "-" + Math.floor(Math.random()*100000) + "-" + Math.floor(Math.random()*100000);
+			
+			//then link
+			var els = uri.split("/");
+			var counter = 0;
+			var newUri = "";
+			for(var i = 0; i < els.length; i++){
+				if(els[i].indexOf(":") != -1){
+					els[i] = req.params[identifiers[counter]];
+					counter++;
+				}
+				if(els[i] != "")
+					newUri += "/" + els[i];
+			}
+			console.log(newUri);
+			counter = 0;
+			
+			var confLink = "<http://"+req.headers.host+ newUri + "/XTCC?id="+uniqueId+">; rel=\"confirm\"";
+			//then deadline
+			var timestamp = new Date().getTime() + exports.timeout;
+			//save everything in the database
+			var trns = new Transaction();
+			trns.uniqueId = uniqueId;
+			trns.timeout = timestamp;
+			trns.item_no = req.params.item_no;
+			trns.save(function (err) {
+				if (!err){
+					//reserve the item
+					afterReservationCallback(req, res);
+					console.log(confLink);
+					//setTimeout for the deadline (only now when saved on db)
+					setTimeout(function() {
+						//delete the transaction, first check if it has not been already committed
+						findTransaction(uniqueId, function(tx){
+							if(tx){
+								console.log("tx : " + tx);
+								removeTransaction(uniqueId, function(err){
+									if(!err){
+										console.log("timeout expired");
+										deleteCallback();
+									}
+									else{
+										console.log(err);
+									}
+								});
+							}
+						});
+					}, exports.timeout - 1000); // fired 1 sec before reservation is deleted
+					
+					//send only confLink, GET PUT and DELETE will do the rest
+					res.header('Link', confLink);
+					//send something meaningful that shows that the item has been reserved
+					res.send("TCC! sent confirmation link in Link header");
+				}
+				else {
+					console.log(err);
+				}
+			});
 			}
 		else {
 			res.send("No TCC :(");
 		}
-		});
 	});
 	
 	//GET handler (info)
@@ -85,8 +99,24 @@ exports.init = function(app, initialCallback, uri, dbUri, t, afterReservationCal
 		findTransaction(uniqueId, function(tx){
 			if(tx){
 				//transaction found
-				var response = ""; 
-				var confLink = "http://"+req.headers.host + uri + "/XTCC?id="+uniqueId;
+				var response = "";
+				
+				//then link
+				var els = uri.split("/");
+				var counter = 0;
+				var newUri = "";
+				for(var i = 0; i < els.length; i++){
+					if(els[i].indexOf(":") != -1){
+						els[i] = req.params[identifiers[counter]];
+						counter++;
+					}
+					if(els[i] != "")
+						newUri += "/" + els[i];
+				}
+				console.log(newUri);
+				counter = 0;
+				
+				var confLink = "http://"+req.headers.host + newUri + "/XTCC?id="+uniqueId;
 
 				if(req.accepts('application/json')){
 					//console.log("JSON ASKED");
@@ -202,7 +232,7 @@ exports.init = function(app, initialCallback, uri, dbUri, t, afterReservationCal
 							setTimeout(function() {
 								//delete the transaction
 								//un-reserve the item
-								modifyStockCount(txs[i].item_no, true, function(err){
+								removeTransaction(txs[i].item_no, function(err){
 									if(!err){
 										console.log("cancel transaction due to timeout");
 										deleteCallback();
@@ -220,4 +250,30 @@ exports.init = function(app, initialCallback, uri, dbUri, t, afterReservationCal
 	
 	//check. if the server died restore transactions in process
 	setDeadlineTimouts();
+}
+
+/*
+* This function takes an uri and parses the regexp
+* part of the uri used in express to parse paths.
+* The result will be an array of names (identifiers)
+* for the variable parts of the path. These identifiers
+* will be used in the creation of the confirmation
+* link.
+* For example: uri = '/:class/:id'; I get parsed 
+* the names of the variables ("class", "id") and when
+* creating the confirmation link these will be asked
+* to the req.params variable thus will send back a
+* correct link.
+*/
+var parseUri = function(uri){
+	var pathnames = uri.split('/');
+	var result = new Array();
+	for(var i = 0; i < pathnames.length; i++){
+		if(pathnames[i].indexOf(':') != -1){
+			//identifier
+			result.push(pathnames[i].split(":")[1]);
+		}
+	}
+	
+	return result;
 }

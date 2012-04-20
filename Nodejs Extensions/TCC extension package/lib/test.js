@@ -33,15 +33,11 @@ app.get('/', function(req, res){
 })
 
 tcc.init(app, 
-function(continuation){
-	console.log("inital callback");
-	continuation();
-},
 '/buy/:item', 
 'mongodb://localhost:27017/ItemDB', 
 60000, 
 function(){
-	console.log("triggered after reservation");
+	console.log("triggered after reservation receives req & res for any info & response");
 },
 function(){
 	console.log("delete triggered");
