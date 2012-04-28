@@ -17,11 +17,12 @@ exports.init = function(app, uri, dbUri, t, afterReservationCallback, deleteCall
 	exports.timeout = t;
 	
 	var db = mongoose.connect(dbUri);
-	var Transaction = db.model('Transaction');
+	var Transaction = db.model('Tr');
 	var identifiers = parseUri(uri);
 	
 	//POST handler (reservation)
 	app.post(uri, function(req, res){
+		console.log("something arrived from POST");
 		if(req.header('Accept').indexOf("+tcc") != -1){
 			//making up confirmation link
 			//first: uniqueid
@@ -33,9 +34,15 @@ exports.init = function(app, uri, dbUri, t, afterReservationCallback, deleteCall
 			var els = uri.split("/");
 			var counter = 0;
 			var newUri = "";
+			var itemid = "";
 			for(var i = 0; i < els.length; i++){
 				if(els[i].indexOf(":") != -1){
 					els[i] = req.params[identifiers[counter]];
+					if(i == els.length - 1){
+						//last element, could be item identifier
+						itemid = req.params[identifiers[counter]];
+						console.log("ue ") + itemid;
+					}
 					counter++;
 				}
 				if(els[i] != "")
@@ -55,7 +62,6 @@ exports.init = function(app, uri, dbUri, t, afterReservationCallback, deleteCall
 			trns.save(function (err) {
 				if (!err){
 					//reserve the item
-					afterReservationCallback(req, res);
 					console.log(confLink);
 					//setTimeout for the deadline (only now when saved on db)
 					setTimeout(function() {
@@ -66,7 +72,7 @@ exports.init = function(app, uri, dbUri, t, afterReservationCallback, deleteCall
 								removeTransaction(uniqueId, function(err){
 									if(!err){
 										console.log("timeout expired");
-										deleteCallback();
+										deleteCallback(req, res, itemid, true);
 									}
 									else{
 										console.log(err);
@@ -78,8 +84,7 @@ exports.init = function(app, uri, dbUri, t, afterReservationCallback, deleteCall
 					
 					//send only confLink, GET PUT and DELETE will do the rest
 					res.header('Link', confLink);
-					//send something meaningful that shows that the item has been reserved
-					res.send("TCC! sent confirmation link in Link header");
+					afterReservationCallback(req, res, itemid);
 				}
 				else {
 					console.log(err);
@@ -125,6 +130,7 @@ exports.init = function(app, uri, dbUri, t, afterReservationCallback, deleteCall
 						deadline: tx.timeout,
 						rel: "confirm",
 						uniqueIdTx : tx.uniqueId,
+						title : confLink,
 					};
 					response = JSON.stringify(jsonResponse);
 					//console.log(response);
@@ -148,10 +154,30 @@ exports.init = function(app, uri, dbUri, t, afterReservationCallback, deleteCall
 	//DELETE handler
 	app.delete(uri+'/XTCC', function(req, res){
 		var uniqueId = req.query.id;
+		
+		var els = uri.split("/");
+		var counter = 0;
+		var newUri = "";
+		var itemid = "";
+		for(var i = 0; i < els.length; i++){
+			if(els[i].indexOf(":") != -1){
+				els[i] = req.params[identifiers[counter]];
+				if(i == els.length - 1){
+					//last element, could be item identifier
+					itemid = req.params[identifiers[counter]];
+					console.log("ue ") + itemid;
+				}
+				counter++;
+			}
+			if(els[i] != "")
+				newUri += "/" + els[i];
+		}
+		counter = 0;
+		
 		removeTransaction(uniqueId, function(){
 			//call the callback
 			console.log("in app.delete");
-			deleteCallback();
+			deleteCallback(req, res, itemid);
 		})
 	});
 	
@@ -159,19 +185,39 @@ exports.init = function(app, uri, dbUri, t, afterReservationCallback, deleteCall
 	//PUT handler (confirm)
 	app.put(uri+'/XTCC', function(req, res){
 		var uniqueId = req.query.id;
+		
+		var els = uri.split("/");
+		var counter = 0;
+		var newUri = "";
+		var itemid = "";
+		for(var i = 0; i < els.length; i++){
+			if(els[i].indexOf(":") != -1){
+				els[i] = req.params[identifiers[counter]];
+				if(i == els.length - 1){
+					//last element, could be item identifier
+					itemid = req.params[identifiers[counter]];
+					console.log("ue ") + itemid;
+				}
+				counter++;
+			}
+			if(els[i] != "")
+				newUri += "/" + els[i];
+		}
+		counter = 0;
+		
 		//in-stock count already decreased by the POST action
 		//check that it has not timed out
 		findTransaction(uniqueId, function(tx){
 			if(tx){
 				removeTransaction(uniqueId, function(){
 					console.log("before final callback");
-					finalCallback();
+					finalCallback(req, res, false, itemid);
 				});
 			}
 			else {
 				//transaction was not found, probably timoeut
 				console.log("this tx: " + uniqueId + " already timeouted or already payed");
-				res.send('ok', 206);
+				finalCallback(req, res, true, itemid);
 			}
 		});
 	});	

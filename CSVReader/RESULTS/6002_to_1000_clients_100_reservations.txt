@@ -1,0 +1,3 @@
+CID6,all_ok,24299,160
+CID4,all_ok,25274,454
+CID5,all_ok,26020,341

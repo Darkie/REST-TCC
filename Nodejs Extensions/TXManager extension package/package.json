@@ -1,0 +1,15 @@
+{
+  "name": "TX Manager Server Extension",
+  "version": "0.0.1",
+  "dependencies": {
+	"redis": "0.6.0",
+	"mongoose": "2.5.5",
+	"mongodb": "0.9.7-3-5",
+	"juggernaut": "2.0.5",
+	"jade": "0.20.1",
+	"html2jade": "0.1.16",
+    "express": "2.3.4",
+	"ejs": "0.4.2",
+	"connect": "1.8.5"
+  }
+}

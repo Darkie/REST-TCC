@@ -1,0 +1,10 @@
+CID3,all_ok,4336,443
+CID1,all_ok,4507,599
+CID10,all_ok,4661,745
+CID8,all_ok,4815,873
+CID4,all_ok,4954,990
+CID5,all_ok,4978,1067
+CID7,all_ok,5056,1152
+CID9,all_ok,5138,1231
+CID6,all_ok,5205,1312
+CID2,all_ok,5325,1421

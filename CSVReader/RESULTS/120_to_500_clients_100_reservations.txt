@@ -1,0 +1,5 @@
+CID5,all_ok,9035,154
+CID7,all_ok,11461,127
+CID411,all_ok,46448,33788
+problem with request confirm: socket hang up
+problem with request confirm: socket hang up

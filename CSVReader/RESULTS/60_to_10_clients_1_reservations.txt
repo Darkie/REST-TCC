@@ -1,0 +1,10 @@
+CID5,all_ok,2031,11
+CID7,all_ok,2034,10
+CID9,all_ok,2027,11
+CID10,all_ok,2025,12
+CID3,all_ok,2020,7
+CID2,all_ok,2021,8
+CID8,all_ok,2020,8
+CID6,all_ok,2020,9
+CID1,all_ok,2019,8
+CID4,all_ok,2020,7

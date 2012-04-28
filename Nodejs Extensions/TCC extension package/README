@@ -1,0 +1,17 @@
+TCC Extension
+
+First import the module like so:
+
+var tcc = require('./tcc');
+
+The only method you can call from the tcc var is the init method. The init method takes seven parameters:
+
+tcc.init(app, uri, dbUri, t, afterReservationCallback, deleteCallback, finalCallback);
+
+app is the application variable created with express.js. 
+uri is the URI from which you want your TCC client to be addressed when doing a reservation. In the test file you can see that it's set as '/buy/:item', for example. Any path can be used.
+dbUri is the URI of the database. This particular version of the TCC Extension uses mongodb, thus we need a mongodb database up and running.
+t is the timeout you want to give to your service. When the timeout expires the reservation will automatically be cancelled. 
+afterReservationCallback is a callback function executed when the reservation of an item is done.
+deleteCallback is a callback function executed when a reservation is cancelled.
+finalCallback is a callback function executed when a user performs a confirmation (PUT request).

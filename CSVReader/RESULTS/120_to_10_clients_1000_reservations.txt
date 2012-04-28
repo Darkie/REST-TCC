@@ -1,0 +1,10 @@
+CID4,all_ok,72631,21014
+CID2,all_ok,89391,35357
+CID8,all_ok,109196,55143
+CID#7,some_timeout_1,169522,114831
+CID#9,some_timeout_1,170016,115322
+CID#10,some_timeout_1000,170362,115346
+CID#3,some_timeout_1,170758,115756
+CID#6,some_timeout_1,171224,116220
+CID#1,some_timeout_1,171864,116732
+CID#5,some_timeout_999,172255,117031

@@ -1,0 +1,11 @@
+body {
+	
+}
+
+#wrapper {
+	width:800px; 
+	margin:0 auto;
+	background-color: #B1FAD1;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+}

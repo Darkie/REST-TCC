@@ -1,0 +1,29 @@
+TX Manager Extension
+
+First import the module like so:
+
+var txmanager = require('./txmanager');
+
+Then you must initialize the txmanager:
+
+txmanager.init(app, u, dbUri, onGET, onDELETE, onPUT);
+
+app is the application variable created with express.js. 
+u is the URI from which you want your TX Manager to be addressed.
+dbUri is the URI of the database. This particular version of the TX Manager Extension uses mongodb, thus we need a mongodb database up and running.
+onGET is a callback function that takes req, res and a list of transactions. It is executed when a GET request is done on the tx manager. This lets you send back whichever page content you want and you can make use of the req and res variables from express.js paths and a variable that stores the current transactions of the logged user.
+onDELETE is a callback function that takes req, res and the list of transactions after the DELETE operation is performed. DELETE operation is usually performed on only one transaction at time. Like in onGET, you may choose to return a page and make use of the req and res variables and of course the list of remaining transactions.
+onPUT is a callback function that is executed when the transactions are all confirmed. It takes req, res and timeouts, which is a variable that stores the number of timeouts in the confirmations. This means that if there is a timeout during the confirmation of a reservation, it will be counted there. It's a number, not an object, for now.
+
+A couple of functions you have to call are functions to register and login in the cloud service. To make things simplier and avoid compilated mashups, I give freedom for you to create your own register + login system. What you only have to do is once you receive some POST from a register or a login page, you call either
+
+txmanager.register(username, password, email, callback);
+
+or
+
+txmanager.login(username, password, callback);
+
+In both cases it's easy to imagine what they do. You should pass the information of the user in both the function calls.
+The callback in the register method has no parameters.
+The callback in the login method has as parameter an object containing the user that logged in. In this case pay attention to set req.session.whatever with the current user. In this way the extension can recognize in the automatically created paths if the user that is sending confirmation links is already logged in or not. If you don't do this, the links will never be accepted because the user will always appear as unlogged.
+

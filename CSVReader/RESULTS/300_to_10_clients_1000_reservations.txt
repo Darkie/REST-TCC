@@ -1,0 +1,8 @@
+CID4,all_ok,75395,21383
+CID1,all_ok,93003,39001
+problem with request confirm: socket hang up
+problem with request confirm: socket hang up
+problem with request confirm: socket hang up
+problem with request confirm: socket hang up
+problem with request confirm: socket hang up
+problem with request confirm: socket hang up

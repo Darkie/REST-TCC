@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="Reader"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="lossoverclients"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="RESULTS"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="CSVReader"/>
 </launchConfiguration>

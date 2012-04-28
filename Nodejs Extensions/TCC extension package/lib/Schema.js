@@ -12,4 +12,4 @@ var Tx = new Schema({
 	item_no  : Number,
 });
 
-var Transaction = mongoose.model('Transaction', Tx);
+var Transaction = mongoose.model('Tr', Tx);
