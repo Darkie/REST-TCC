@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
- * @author Masiar
+ * @author Masiar Babazadeh
  * This class reads a CSV file generated from the tests
  * and chunks its values to make some assumptions and 
  * output a PGFPlot-compliant text to be used in the thesis
@@ -33,10 +33,10 @@ public class Reader {
 			for (int i=0; i<children.length; i++) {
 				// Get filename of file or directory
 				String filename = children[i];
+				System.out.println("Filename : " + filename);
 				read_second(args[0] + "/" + filename);
 			}
 		}
-		
 
 		// It is also possible to filter the list of returned files.
 		// This example does not return any files that start with `.'.
@@ -62,9 +62,6 @@ public class Reader {
 
 	/*
 	 * Read the file passed as filename
-	 * XXX: MISURA LA LUNGHEZZA DEL FILE VS IL SUO NOME: SE IL FILE `E PIU CORTO
-	 * SIGNIFICA CHE IL TEST NON E` FINITO PERCHE` ERA LUNGO E LE RICHIESTE SONO ANDATE
-	 * PERSE (20 MIN DI TO NON LI ASPETTO)
 	 */
 	public static void read_second(String filename){
 		String thisLine;
@@ -73,6 +70,7 @@ public class Reader {
 			int timeAfterInfo = 0;
 			int transactionTimeouts = 0;
 			int connectionTimeouts = 0;
+			int correctConnections = 0;
 
 			//get timeout/clients/reservations
 			String[] result = filename.split("_");
@@ -85,40 +83,50 @@ public class Reader {
 
 			FileInputStream fin =  new FileInputStream(filename);
 			// JDK1.1+
-			BufferedReader myInput = new BufferedReader
-					(new InputStreamReader(fin));
+			BufferedReader myInput = new BufferedReader(new InputStreamReader(fin));
 
-			while ((thisLine = myInput.readLine()) != null) {  
+			while((thisLine = myInput.readLine()) != null) {  
 				String[] lineSplitted = thisLine.split(",");
 				//0 = PID / 1 = timeout or not / 2 = time before infoget / 3 = time before confirm
 
 				//check if general timeout
-				if(thisLine.equals("problem with request: connect ETIMEDOUT") || thisLine.equals("problem with request: socket hang up")){
+				if(thisLine.equals("problem with request: connect ETIMEDOUT") || thisLine.equals("problem with request: socket hang up") ||
+						thisLine.equals("problem with request confirm: socket hang up") || thisLine.startsWith("problem")){
 					//even though now I should handle these
 					connectionTimeouts++;
 					continue;
 				}
-
-				if(thisLine.startsWith("Wrong transaction")){
+				else if(thisLine.equals("")){
+					//errors in printing, continue
+					continue;
+				}
+				else if(thisLine.startsWith("Wrong transaction")){
 					transactionTimeouts++;
 					continue;
 				}
+				
+				else if(thisLine.startsWith("CID")){
+					correctConnections++;
+					//add times
+					timeBeforeInfo = timeBeforeInfo + Integer.parseInt(lineSplitted[2]);
+					timeAfterInfo = timeAfterInfo + Integer.parseInt(lineSplitted[3]);
 
-				//add times
-				timeBeforeInfo = timeBeforeInfo + Integer.parseInt(lineSplitted[2]);
-				timeAfterInfo = timeAfterInfo + Integer.parseInt(lineSplitted[3]);
-
-				//check if some transactions timed out
-				if(!lineSplitted[1].equals("all_ok")){
-					String[] notAllOk = lineSplitted[1].split("_");
-					//in theory 2 = number that timeouted
-					transactionTimeouts = transactionTimeouts + Integer.parseInt(notAllOk[2]);
+					//check if some transactions timed out
+					if(!lineSplitted[1].equals("all_ok")){
+						String[] notAllOk = lineSplitted[1].split("_");
+						//in theory 2 = number that timeouted
+						transactionTimeouts = transactionTimeouts + Integer.parseInt(notAllOk[2]);
+					}
 				}
 			}
 			p.setSumTimeAfterInfo(timeAfterInfo);
 			p.setSumTimeBeforeInfo(timeBeforeInfo);
 			p.setTransactionTimeouts(transactionTimeouts);
 			p.setConnectionTimeouts(connectionTimeouts);
+			p.setCorrectConnections(correctConnections);
+			
+			//debug purposes
+			p.print(filename);
 			
 			points.add(p);
 		}catch (Exception e){//Catch exception if any

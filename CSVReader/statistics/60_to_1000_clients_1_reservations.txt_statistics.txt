@@ -1,0 +1,10 @@
+Transactions:1
+Clients:1000
+timeoutTime:60
+sumTimeBeforeInfo:2723093
+sumTimeAfterInfo:587989
+transactionTimeouts:0
+connectionTimeouts:0
+correctConnections:910
+Mean time for measurements before the infoGET:2992
+Mean time for measurements after the infoGET:646
