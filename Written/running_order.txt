@@ -1,0 +1,179 @@
+i. Abstract
+ii. Acknowledgments
+iii. Table of contents
+iv. Table of Figures
+
+1. Introduction
+	- general overview of distributed atomic transactions
+		- what are they
+		- why we want them
+	- very general overview of what I've done
+		- what have I done in general
+		- few words that describe client + server
+
+2. TCC [refer to the paper]
+	- what is a transaction, why do we want distributed atomic transactions
+		- books example
+			- show the cases in which things can go wrong and why
+	- current solutions (and their problems)
+		- REST-*
+		- RSS
+	- TCC solution (theory)
+		- try cancel/confirm protocol in details
+	- TCC drawback
+		- worst case scenario
+
+3. Architecture
+	- General overview of implementing TCC
+		- introducing the three types of TCC developed (client + extension -> server, client -> server -> server, server -> server -> server)
+	- Logical view
+	- Development view
+	- Process View
+	- Physical View
+	- use case scenario (maybe)
+	
+4. Component Design and interface
+	- components in TCC
+	- for each big component, how they interact
+		- HTTP headers for filtering (examples)
+		- JSON or XML for communicating data (examples)
+		- REST to trigger methods on servers (examples)
+	
+5. Detailed protocol design
+	- general idea of what happens
+	- how is reservation triggered (POST)
+	- how is information about transaction is gathered (GET)
+	- how is transaction removed (DELETE)
+	- how is(are) transaction(s) confirmed (PUT)
+	
+6. Implementation
+	- three types: client + extension -> server, client -> server -> server, server -> server -> server
+	- client + extension -> server
+		- chrome extension implementation
+			- filtering of XTCC
+			- info GET & and subsequent storage of the response (for GUI)
+			- session storage for transactions if page is closed / browser is closed
+			- what info did I display?
+				- name + timer + delete
+				- if timer goes of -> impossible to confirm
+			- delete
+				- what happens when deleting a transaction (send DELETE, remove info for that transaction from browser's cached data)
+			- confirmation phase
+				- what happens when confirming (PUT + flush of data)
+				- what happens when confirming and server is down
+				- what happens when confirming and is timeout
+		- selling server implementation
+			- database for items
+			- when reservation triggers (POST)
+				- decrease the number of items in the storage
+				- create a unique id to identify the reservation and store it in a db table for transactions
+				- setup a timeout, when fired add back the item
+				- send back confirmation link in header
+					- talk over https to avoid eavesdropping of confirmation link
+			- when GET on confirmation link triggers
+				- send back JSON or XML with full info about the current transaction
+			- when DELETE on confirmation link triggers
+				- remove the transaction with that unique id from the database
+				- increase stock count of the item by one (itemid stored in transaction db)
+				- no need to kill the timeout, when fired it won't find the transaction and do nothing
+			- when PUT on confirmation link triggers
+				- remove transaction with that unique id from the database
+				- start some procedure for payment
+				- no need to kill the timeout, when fired it won't find the transaction and do nothing
+		- interaction between the two
+			- general case, user navigates in the website
+			- user click on a link/button to buy an item
+			- POST sent to server, response sent back
+			- chrome extension intercepts the response (sees ?XTCC in header)
+			- chrome extension filters the response and takes the confirmation link
+			- chrome extension makes a GET request on confirmation link to get more info
+			- server receives GET, assemble JSON or XML response and sends it back
+			- chrome extension filters the response and stores the data
+			- when GUI opened, chrome extension shows content of the stored data (current transactions)
+			- cancel / confirm visual outputs
+
+
+	- client -> server -> server
+		- chrome extension modification
+			- transaction manager server asked at the beginning
+			- registration/login needed to save transactions online
+			- filters XTCC and sends directly link to transaction manager
+		- creation of transaction manager
+			- how does it work
+				- receives confirmation links from logged user
+				- sends info GET
+				- listen to responses and fill db of information about the transaction
+				- when receiving a GET on the main page returns the main page with the current transactions (similar to the GUI of chrome extension)
+				- when receiving a DELETE on a unique id it triggers the DELETE on that transaction
+				- when receiving a PUT on a particular link, detects the user logged, then takes all its transactions and confirms
+				- https to avoid eavesdropping
+		- interaction among the three of them
+			- visually same as without transaction manager
+			- information stored in the cloud, user won't perceive it
+			- GUI loaded like a webpage stored online
+
+
+
+	- S and extension with TCC ( server -> server -> server )
+		- what is S
+			- talk about the language in general (why S, pros, ...)
+		- what have I done
+			- created two libs TCC and TXManager
+			- when talking with some TCC-compliant service, load my TCC library instead of default S lib
+			- also create txmanager to handle transactions
+			- reserve() reserves an item, implicitly calls info GET function, result sent to tx manager
+			- when finishing reserving, call confirm() on tx manager or delete to delete reservations
+		- what can be done
+			- integrate TCC in all S's communications
+			- something else? discussed with daniele, forgot most of it
+
+	- node.js extensions (selling server + transaction manager server)
+		- how i implemented a selling server extension (and API)
+			- need that programmer already uses express.js
+			- extends paths with given path and uses to setup communications for TCC
+			- explain how everything happens in init() function
+				- basically only init function
+				- explain input parameter (app / uris / callbacks)
+		- how i implemented a transaction manager server (and API)
+			- again needs for underlying express.js
+			- again extends paths
+			- explain init()
+				- most happens here again
+				- input parameter (app / uris / callbacks)
+			- need for registration
+				- programmer has to setup a login function and use .login() or .register()
+				- programmers needs to remember to setup session variable otherwise users won't never be logged
+
+7. Testing
+	- purpose of testing
+		- what am I searching for
+	- machine that hosted testing
+		- hardware settings
+	- how testing were conducted
+		- what is a testing agent
+			- node.js server that behaves like a user
+				- creates a new account on the transaction manager
+				- logs in
+				- does a certain number of reservations
+				- acts like chrome extension: filter responses and send confirmation link to transaction manager
+				- after all reservations are done, sends a confirm
+				- interaction between transaction manager and base server is the same
+		- transaction manager and item seller servers on one processor (on different cores)
+		- testing agents on the other
+		- augmented socket timeout on both servers to measure longer times
+		- testing with 1, 10, 100, 250, 500, 750, 1000 users
+		- testing with 1, 10, 100, 1000 transactions per user
+		- testing with 60, 120, 300, 600, 1200 seconds of timeout from the server
+	- how data was aggregated and examined
+		- gathered output files with testingID, how many timeouts during confirmation, how much time (ms) took from the info GET to the confirm OK, how much time (ms) took from the confirm trigger to the confirm OK
+		- small Java program that took these files and created CSV files with general data about test, numbers of timeouts, mean times and standard deviations 
+	- results (considerations + graphs)
+		- TODO (show data depending on what I really want to show, useless to show everything)
+
+8. Future work
+	- what can be done? (maybe S's "what can be done" could be moved here)
+	- basket for different "sets" of items for same user
+	
+9. Conclusions
+	- when work started, how much did it take
+	- underline that TCC is better than others

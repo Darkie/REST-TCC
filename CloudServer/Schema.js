@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
 
 var Tx = new Schema({
 	username          : String,
-	uniqueId          : Number,
+	uniqueId          : String,
 	timeout           : Number,
 	item_name         : String,
 	confirmation_link : String,

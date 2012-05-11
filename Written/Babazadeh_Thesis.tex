@@ -1,0 +1,66 @@
+\documentclass[mscthesis,print]{usiinfthesis}
+\usepackage{listings}
+\usepackage{alltt}
+\usepackage{amsthm}
+
+\newcommand{\reqres}[2]{\vspace{1mm}\noindent$\Rightarrow$\begin{minipage}[t]{\textwidth}\begin{alltt}#1\end{alltt}\end{minipage}\vspace{3mm}\\
+\noindent$\Leftarrow$\begin{minipage}[t]{\textwidth}\begin{alltt}#2\end{alltt}\end{minipage}\vspace{1mm}}
+\newtheorem{theodef}{Definition}
+
+\lstdefinelanguage{algebra}
+{morekeywords={distributed,atomic,transactions,rest,restful},
+sensitive=false,
+morecomment=[l]{//s},
+}
+
+% TITLE
+\title{Distributed Atomic Transactions over RESTful Services}
+%\subtitle{}
+\specialization{Major in Software Design}%optional
+%\subtitle{Subtitle: Reinventing the World} %optional 
+\author{Masiar Babazadeh} %compulsory
+\begin{committee}
+\advisor{Prof. Dr.}{Cesare}{Pautasso} %compulsory
+%\coadvisor{}{Fernando}{Olivero}{} %optional
+\end{committee}
+\Day{17} %compulsory
+\Month{June} %compulsory
+\Year{2012} %compulsory, put only the year
+\place{Lugano} %compulsory
+%\dedication{To someone}
+%\openepigraph{Citazione figa}
+
+\begin{document}
+
+\maketitle %generates the titlepage, this is FIXED
+
+\frontmatter %generates the frontmatter, this is FIXED
+\begin{abstract}
+ABSTRACT
+\end{abstract}
+
+\begin{acknowledgements}
+\end{acknowledgements}
+
+\tableofcontents 
+\listoffigures %optional
+\listoftables %optional
+
+\mainmatter
+
+\input{introduction.tex}
+\input{TCC.tex}
+\input{Architecture.tex}
+\input{compdes.tex}
+\input{detdesign.tex}
+\input{implementation.tex}
+%\input{evaluation.tex}
+%\input{conclusions.tex}
+
+\backmatter
+
+
+\bibliographystyle{alpha}
+\bibliography{bibliography}
+
+\end{document}

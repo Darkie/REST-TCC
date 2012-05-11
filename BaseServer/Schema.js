@@ -15,7 +15,7 @@ var ItemToSell = new Schema({
 });
 
 var Tx = new Schema({
-	uniqueId : Number,
+	uniqueId : String,
 	timeout  : Number,
 	item_no  : Number,
 });

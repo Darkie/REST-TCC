@@ -21,6 +21,7 @@ function tcc() {
 /*
 * Init the tcc object. Stores the txmanager in order to give it the 
 * confirmation link once it has been trimmed out.
+* XXX: TO BE REFACTORED, INPUT uri NOT NEEDED ANYMORE! Pass uri dirctly to .reserve function
 */
 tcc.prototype.__init = function(txmanager, uri, scheduler){
 	this.txmanager = txmanager;

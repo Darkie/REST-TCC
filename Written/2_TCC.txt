@@ -1,0 +1,134 @@
+- Why REST needs Transactions
+
+In the REST community there is dissension whether or not transaction support is needed and possible. This section will show why REST needs transactions through a business case, it will then outline the current solutions and their problems and finally will show the Try-Cancel/Confirm (TCC) pattern.
+
+Suppose we want to buy the first two books of a fantasy series. We want the both of them right away, we don't want to wait when finishing the first one for the second one to arrive, nor wasting time ordering the second one while reading the first. We found them on two different websites: amazon.com and bookfinder.com, the first one is available only at Amazon, the second one only on Bookfinder. Let's assume both of the stores have the same hypermedia contract for buying (to simplify things, without loss of generality, since the composite service must be aware of all the hypermedia contracts involved). The REST implementation of the store information and buying process could be sketched as follows.
+Clients can inquiry for the availability of a book in a store at the URI: /books/{book-title}. For example, the GET /books/A-Game-of-Thrones will return a hyperlink to buy the the specified book or none (e.g. 204 No Content) if the book is not available anymore.
+A POST request to the same URL with a payload referencing such book will create a new purchase resource and redirect the client to it by sending a hyperlink identifying it, for example /buy/{book-title}/{id}. The body of the request might contain some information about the chosen book (i.e., <book title="Games of Thrones" author="George R. R. Martin">). The purchase resource can be updated with additional information by performing a PUT on /buy/{book-title}/{id}/.
+Now that we know the interface of the services, we are ready to dive into a user story that will motivate the use of transactions in REST.
+As a bookworm, I would like to buy the first two books of the Game of Thrones series. Both of the books are available online on two different webstores.
+Since it's the webstore's responsibility to satisfy my need, a very naive implementation, without a transaction model for REST, would be the following:
+
+1. GET amazon.com/books/A-Game-of-Thrones
+2. POST amazon.com/buy/A-Game-of-Thrones
+3. GET bookfinder.com/books/A-Clash-of-Kings
+4. POST bookfinder.com/buy/A-Clash-of-Kings
+
+What can happen is that after we buy the first book (step 2) the second book won't be available anymore (step 3). In this way we end up having just the first book but not the second. If we try to reorder the requests as follows:
+
+1. GET amazon.com/books/A-Game-of-Thrones
+2. GET bookfinder.com/books/A-Clash-of-Kings
+3. POST amazon.com/buy/A-Game-of-Thrones
+4. POST bookfinder.com/buy/A-Clash-of-Kings
+
+we can still end up in the same situation, because both in step 1 and 2 may return availability for the chosen books, but the subsequent requests may fail due to concurrent purchase (imagine there is only one book left and while we are between step 2 and 3 someone already sent a POST request purchasing the book before us). The idea behind TCC is to make step 3 and 4 tentative, so that they can be confirmed later, thus making the whole process atomic and assuring that it will happen as a whole or not happen at all.
+
+The next section will illustrate the current solutions that we can find to solve this problem and why they are not suitable for distributed atomic transactions over REST.
+
+- Current solutions
+This section will focus on two solutions that can be found to solve this problem. The first one is REST-*, recently appeared on the book "REST in Practice". The second one is ATOM Pub/Sub.
+
+	- REST-*
+The JBoss REST-* initiative wants to provide various quality of services guarantees for RESTful web services, in the same way as WS-* has done for web services. REST-* follows an approach very similar to the one used by TIP or WS-AT: to make the invocation transactional, a context is added to each invocation. The problem is that the receiving service has to understand the context in order to participate in the transaction, thus this brings tight coupling, something that TCC tries to avoid.
+
+	- ATOM Pub/Sub
+This approach uses, as the name suggests, a publish/subscribe mechanism based on feeds. The transaction coordinator publishes updates on the transaction outcome and each participant listens to what it can be interested in. This is feasible up to the point that each participant knows the feed it has to listen to and understands the semantics of the published updates. Again this shows a tight coupling, which is not present in TCC as in our case the participants has to know nothing besides their own business contract. Moreover, the ATOM Pub/Sub solution implies that the coordinator cannot inquiry a participant about its final outcome (it could be interested if we take into account heuristic decisions). This is odd, since a coordinator has all the reasons to be interested in the final outcome of a transaction.
+
+- TCC
+Now that current solutions have been illustrated, the reader has a glimpse on what we have now and what we want to achieve. With another use case this section will show how the TCC protocol works from the point of view of the two parties involved.
+
+Suppose I want to buy the first and the second book of a fantasy series. I want to be able to confirm the purchase when I'm done. Purchases that are not confirmed are not billed to by account.
+
+The confirmation should be business-specific. Let's assume that a confirmation link is returned by the RESTful API of the webstore, for example in response to a GET /buy/{book-title}/{id} the service would return something like <book title id><payment uri="/payment/X"></book>. Thus the purchase can be confirmed by performing a request PUT /payment/X <MASTERCARD ...>.
+
+The workflow of the webstore can be seen as follows:
+
+Workflow engine:
+GET amazon.com/books/A-Game-of-Thrones
+	200
+POST amazon.com/buy/A-Game-of-Thrones
+	302 (Location: /buy/A-Game-of-Thrones/A)
+GET bookfinder.com/books/A-Clash-of-Kings
+	200
+POST bookfinder.com/buy/A-Clash-of-Kings
+	302 (Location: /buy/A-Clash-of-Kings/B)
+GET amazon.com/buy/A-Game-of-Thrones
+	200 (Link to confirm: /payment/A)
+GET bookfinder.com/buy/A-Clash-of-Kings/B
+	200 (Link to confirm: /payment/B)
+
+Transaction Coordinator:
+PUT amazon.com/payment/A
+	200
+PUT bookfinder.com/payment/B
+	200
+
+The first set of interactions can be driven by the workflow that composes the two services, while the final confirmations that conclude the transaction can be made by a transaction coordinator component that will execute the PUT requests.
+
+What has been shown is the happy path, in which everything goes as expected and no one cries. What happens if, for example, step 4 fails? As mentioned before, the payment is not be triggered until there is no confirmation. Already this setup avoids our original problem, without ending up in a situation in which I have one of the two books but not the other.
+
+Let's refine even more the protocol and take a look of the problem from the point of view of the webstores. The last use case is the following:
+As a webstore, I do not want to wait for a confirmation forever. I want to be able to autonomously cancel a pending booking after some timeout expires.
+
+This use case brings an obvious problem: what happens if a user reserves some books but never confirms them? This might make the webstore lose money since there could be other people interested in the reserved goods. As result, we can add a cancellation event, that is triggered when a timeout expires (which is specific to the service). The REST implementation, then, can be adjusted as follows: GET /buy/{book-title}/{id} returns <book number seat><payment uri="/payment/X" deadline="24h"></book>. The composing workflow service may use the deadline field as a hint on when the reservation will expiry and cancel itself.
+
+- Generalization: Try-Cancel/Confirm
+The use cases presented are particular cases of the more general Try-Cancel/Confirm (TCC) protocol. As shown in [FIGURE], once a request is issued, it remains "tentative" (in the reserved state) until confirmed or cancelled (either by a timeout in the server or from a client). 
+
+[image of TCC]
+
+This protocol meets the need of industry, which has shown that transactions need not to be invasive. This in particular refers to the complexity in the design that might be introduced to create services that can participate in a transaction. With TCC's approach, we have loose coupling among resources: participating services are unaware of the fact that they are part of a global transaction. Indeed, the individual participating services do not need to have additional knowledge or implement any extra protocol besides the one they already support. 
+Also, with this solution we automatically avoid the use of an explicit transaction context, which is widely adopted in distributed transaction protocols. This is one of the most important requirements to ensure loose coupling.
+
+- The protocol
+Before showing the protocol itself, let's define the transaction more formally:
+Definition 1. A REST-based transaction T (e.g., purchasing two books) is a number of invocations Ri (e.g., purchasing individual books) across REST-ful services Si (e.g., amazon.com and bookfinder.com) that need to either confirm altogether or cancel altogether. In other words: either all Ri succeed via an explicit confirmation Ri,confirm (e.g., by paying for the book) , or all Ri cancel but nothing in between.
+	- Happy path
+	1. A transactional workflow T goes about interacting with multiple distinct RESTful service APIs Si
+	2. Interactions Ri may lead to a state transition of the participating service Si identified by some URI - this URI corresponds to Ri,confirm
+	3. Once the workflow T successfully completes, the set of confirmation URIs and any required application-level payload is passed to a transaction ser- vice (or coordinator)
+	4. The transaction service then calls all of the Ri,confirm with an idempotent PUT request on the corresponding URIs with the associated payloads
+	
+[FIGURE]
+
+The protocol (Figure...) guarantees atomicity because each service receives either a consistent request for cancel or to confirm. Moreover, all of them terminate their business transactions in the same way. Note that PUT and DELETE are idempotent actions, therefore we can assume Ri,confirm is idempotent too. 
+
+	- Sad path
+The protocol looks very simple. How can this work in the presence of failure? This section will show what can go wrong and how can it recover from failures. We assume that each party is able to restore its own durable state, so we focus on the recoverability of the atomicity property across all parties.
+We define recovery as follows:
+
+1. Checking the state of a transaction after node failure followed by restart, or
+2. Checking the state of a transaction triggered by timeout
+
+The recovery is performed by both the coordinator service and the participant services. The first one is expected to recover all the transactions he knows: if there were three pending transactions (waiting for a confirm action) we expect it to recover them all. On the other hand, the services want to recover the transactions because they want to release the reserved resources as earliest as possible.
+
+As for the participant services, each participating service Si does the following:
+
+1. For recovery before step 2, do nothing. 
+2. For recovery after step 4: do nothing. 
+3. For recovery in between steps 2 and 4: execute Ri,cancel autonomously
+(This can be triggered by a timeout).
+
+For the coordinator things are a bit different. The most problematic failures are those happening during step 4. We want all the participants to arrive at the same end state for transaction T; step 4 involves multiple participants that are not aware that they are part of a transaction, so a failure here could be problematic. The following is a naive approach that can be improved in the future:
+
+1. For recovery before step 2, do nothing. 
+2. For recovery between steps 2 and 4: do nothing. 
+3. For recovery after step 4: do nothing. 
+4. For recovery during step 4: retry Ri,confirm with each participating service
+Si. Since Ri,confirm are performed using idempotent methods, they may be retried as many times as necessary. Note: this requires the coordinator to durably log all participant information before starting step 4.
+
+[IMAGE]
+
+- Guaranteeing atomicity
+Even with failures, we can still (eventually) preserve atomicity. In fact, given enough time, the global transaction T will be finally confirmed everywhere or cancelled everywhere (or nothing happened). If we take a look at the protocol steps, we can prove that either all Ri are confirmed or all are cancelled. More in details:
+
+1. If there are no failures, then steps 1-4 run through and each Ri will have been confirmed.
+2. For any failures before step 2, no Ri exists, meaning that nothing has happened.
+3. For any failures during or after step 2 but before step 4: all Ri will eventually be cancelled autonomously by each Si (since nothing has been con- firmed yet).
+4. For any failures during step 4: the coordinator will retry each Ri,confirm until it succeeds. Because confirmation is idempotent, this will eventually succeed (note: there is one caveat here - discussed next).
+5. For any failures after step 4: all Ri,confirm have been done, so we already have atomicity and no action is required.
+
+- Saddest path
+Although everything seems fine and the protocol seems bullet-proof, there is one weak point in our proof of atomicity. During step 4, while the coordinator is confirming transactions, it may happen that some services Si, that still need to be confirmed, times out and cancel on its own. In the worst case this means that some transactions will be confirmed and some will cancel, effectively breaking atomicity. This is what is called a heuristic exception. In the world of atomicity, there has been a lot of interesting work, but the most important result is that a perfect solution is not possible. In practice, there will always be a possibility that at least one participating service (or node) is unaware of the outcome of the global distributed transaction.
+
+In the next chapter...

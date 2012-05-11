@@ -1,10 +1,2 @@
-Transactions:100
-Clients:250
-timeoutTime:120
-sumTimeBeforeInfo:691843
-sumTimeAfterInfo:672616
-transactionTimeouts:7193
-connectionTimeouts:0
-correctConnections:3
-Mean time for measurements before the infoGET:230614
-Mean time for measurements after the infoGET:224205
+Transactions,Clients,timeoutTime,sumTimeBeforeInfo,sumTimeAfterInfo,transactionTimeouts,connectionTimeouts,correctConnections,MeanTimeBeforeInfoGET,MeanTimeAfterInfoGET,StandardDeviationBeforeInfo,StandardDeviationAfterInfo
+100,250,120,691843,672616,7193,0,3,230614,224205,328709.3019690803,328340.84044175805

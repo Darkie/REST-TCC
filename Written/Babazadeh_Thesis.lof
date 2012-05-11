@@ -1,0 +1,15 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces State machine representing a generic resource that implements the Try-Cancel/Confirm protocol\relax }}{7}{figure.caption.9}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Protocol architecture in the Happy Path case\relax }}{8}{figure.caption.11}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Example of a book reservation.\relax }}{9}{figure.caption.13}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Logical View of the system.\relax }}{12}{figure.caption.15}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Process View of the system.\relax }}{13}{figure.caption.16}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Development View of the system.\relax }}{15}{figure.caption.17}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Physical View of the system.\relax }}{16}{figure.caption.18}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Freedom of choice by the user for the transaction manager.\relax }}{26}{figure.caption.20}
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Transactions in progress for the logged user.\relax }}{26}{figure.caption.21}

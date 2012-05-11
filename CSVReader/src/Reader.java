@@ -71,6 +71,8 @@ public class Reader {
 			int transactionTimeouts = 0;
 			int connectionTimeouts = 0;
 			int correctConnections = 0;
+			ArrayList<Integer> allTimesBeforeInfo = new ArrayList<Integer>();
+			ArrayList<Integer> allTimesAfterInfo = new ArrayList<Integer>();
 
 			//get timeout/clients/reservations
 			String[] result = filename.split("_");
@@ -110,7 +112,10 @@ public class Reader {
 					//add times
 					timeBeforeInfo = timeBeforeInfo + Integer.parseInt(lineSplitted[2]);
 					timeAfterInfo = timeAfterInfo + Integer.parseInt(lineSplitted[3]);
-
+					
+					allTimesBeforeInfo.add(Integer.parseInt(lineSplitted[2]));
+					allTimesAfterInfo.add(Integer.parseInt(lineSplitted[3]));
+					
 					//check if some transactions timed out
 					if(!lineSplitted[1].equals("all_ok")){
 						String[] notAllOk = lineSplitted[1].split("_");
@@ -124,23 +129,16 @@ public class Reader {
 			p.setTransactionTimeouts(transactionTimeouts);
 			p.setConnectionTimeouts(connectionTimeouts);
 			p.setCorrectConnections(correctConnections);
+			p.setAllTimesBeforeInfo(allTimesBeforeInfo);
+			p.setAllTimesAfterInfo(allTimesAfterInfo);
 			
 			//debug purposes
-			p.print(filename);
+			//p.print(filename);
+			p.print();
 			
 			points.add(p);
 		}catch (Exception e){//Catch exception if any
 			System.err.println("Error: " + e.getMessage());
 		}
-		
-		outputGraph();
-	}
-	
-	
-	public static void outputGraph(){
-		//take list of points
-		//compute some values for them (%, median for times, ...)
-		//take these values and use them to produce for each Point an actual graph point
-		
 	}
 }

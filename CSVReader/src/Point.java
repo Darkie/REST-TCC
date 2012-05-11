@@ -1,5 +1,9 @@
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 
 public class Point {
@@ -13,11 +17,21 @@ public class Point {
 	private int connectionTimeouts;
 	private int correctConnections;
 	
+	private ArrayList<Integer> allTimesBeforeInfo;
+	private ArrayList<Integer> allTimesAfterInfo;
+	
+	/*
+	 * Constructor
+	 */
 	public Point(int tx, int cli, int totime){
 		this.transactions = tx;
 		this.clients = cli;
 		this.timeoutTime = totime;
 	}
+	
+	/*
+	 * Getters & Setters
+	 */
 	public int getTransactions(){
 		return this.transactions;
 	}
@@ -54,8 +68,38 @@ public class Point {
 	public void setCorrectConnections(int correctConnections){
 		this.correctConnections = correctConnections;
 	}
+	public void setAllTimesBeforeInfo(ArrayList<Integer> atbi){
+		this.allTimesBeforeInfo = atbi;
+	}
+	public void setAllTimesAfterInfo(ArrayList<Integer> atai){
+		this.allTimesAfterInfo = atai;
+	}
+	
+	/*
+	 * This function prints on a SINGLE file the results of
+	 * all the tests
+	 */
+	public void print() throws IOException{		
+		FileWriter outFile = new FileWriter("whole.cvs", true); //opens file
+		long meanBeforeInfo = -1;
+		long meanAfterInfo = -1;
+		if(correctConnections != 0){
+			meanBeforeInfo = (sumTimeBeforeInfo / correctConnections);
+			meanAfterInfo = (sumTimeAfterInfo / correctConnections);
+		}
+		
+		double standardDeviationBeforeInfo = computeStDev(allTimesBeforeInfo, meanBeforeInfo);
+		double standardDeviationAfterInfo = computeStDev(allTimesAfterInfo, meanAfterInfo);
+		outFile.write(transactions + "," + clients + "," + timeoutTime + "," + sumTimeBeforeInfo + "," + sumTimeAfterInfo + "," + transactionTimeouts + "," + connectionTimeouts + "," + correctConnections + "," + meanBeforeInfo + "," + meanAfterInfo + "," + standardDeviationBeforeInfo + "," + standardDeviationAfterInfo + "\n"); //writes to file
+		outFile.close(); //closes the file
+	}
+	
+	/*
+	 * This function prints in a file the results of the test in
+	 * a CVS format useful for future displaying.
+	 */
 	public void print(String filename){
-		System.out.println("Transactions : " + transactions);
+		/*System.out.println("Transactions : " + transactions);
 		System.out.println("Clients : " + clients);
 		System.out.println("timeoutTime : " + timeoutTime);
 		System.out.println("sumTimeBeforeInfo : " + sumTimeBeforeInfo);
@@ -64,28 +108,56 @@ public class Point {
 		System.out.println("connectionTimeouts : " + connectionTimeouts);
 		System.out.println("correctConnections : " + correctConnections);
 		System.out.println("Mean time for measurements before the infoGET : " + (sumTimeBeforeInfo / clients));
-		System.out.println("Mean time for measurements after the infoGET : " + (sumTimeAfterInfo / clients));
+		System.out.println("Mean time for measurements after the infoGET : " + (sumTimeAfterInfo / clients)); */
 		
 		String content = "";
-		content += "Transactions:" + transactions + "\n" + "Clients:" + clients + "\n" + "timeoutTime:" + timeoutTime;
-		content += "\n" + "sumTimeBeforeInfo:" + sumTimeBeforeInfo + "\n" + "sumTimeAfterInfo:" + sumTimeAfterInfo;
-		content += "\n" + "transactionTimeouts:" + transactionTimeouts + "\n" + "connectionTimeouts:" + connectionTimeouts;
-		content += "\n" + "correctConnections:" + correctConnections;
-		content += "\n" + "Mean time for measurements before the infoGET:" + (sumTimeBeforeInfo / correctConnections);
-		content += "\n" + "Mean time for measurements after the infoGET:" + (sumTimeAfterInfo / correctConnections);
+		long meanBeforeInfo = -1;
+		long meanAfterInfo = -1;
+		if(correctConnections != 0){
+			meanBeforeInfo = (sumTimeBeforeInfo / correctConnections);
+			meanAfterInfo = (sumTimeAfterInfo / correctConnections);
+		}
 		
-		{
-			  try{
-			  // Create file
-			  String[] result = filename.split("/");
-			  FileWriter fstream = new FileWriter("statistics/" + result[1] + "_statistics.txt");
-			  BufferedWriter out = new BufferedWriter(fstream);
-			  out.write(content);
-			  //Close the output stream
-			  out.close();
-			  }catch (Exception e){//Catch exception if any
+		double standardDeviationBeforeInfo = computeStDev(allTimesBeforeInfo, meanBeforeInfo);
+		double standardDeviationAfterInfo = computeStDev(allTimesAfterInfo, meanAfterInfo);
+		
+		content = "";
+		content += "Transactions,Clients,timeoutTime,sumTimeBeforeInfo,sumTimeAfterInfo,transactionTimeouts,connectionTimeouts,correctConnections,MeanTimeBeforeInfoGET,MeanTimeAfterInfoGET,StandardDeviationBeforeInfo,StandardDeviationAfterInfo\n";
+		content += transactions + "," + clients + "," + timeoutTime + "," + sumTimeBeforeInfo + "," + sumTimeAfterInfo + "," + transactionTimeouts + "," + connectionTimeouts + "," + correctConnections + "," + meanBeforeInfo + "," + meanAfterInfo + "," + standardDeviationBeforeInfo + "," + standardDeviationAfterInfo;
+		
+		try{
+			// Create file
+			String[] result = filename.split("/");
+			FileWriter fstream = new FileWriter("statistics/" + result[1] + "_statistics.txt");
+			BufferedWriter out = new BufferedWriter(fstream);
+			out.write(content);
+			//Close the output stream
+			out.close();
+		}
+		catch (Exception e){//Catch exception if any
 			  System.err.println("Error: " + e.getMessage());
-			  }
-			  }
+		}
+	}
+	
+	/*
+	 * Function that computes the standard deviation given
+	 * a list of Integers that in this case are times in ms.
+	 */
+	public double computeStDev(ArrayList<Integer> times, long mean){
+		//compute squared deviation & sum
+		long sum = 0;
+		for(int i = 0; i < times.size(); i++){
+			sum += (long) java.lang.Math.pow((times.get(i) - mean), 2);
+		}
+		if((times.size() - 1) > 0){
+			double stdevsquared = sum / (times.size() - 1);
+			if(Double.isNaN(java.lang.Math.sqrt(stdevsquared))){
+				//never printed...
+				System.out.println("NAN QUI sum = " + sum + " e times.size() - 1 = " + (times.size() - 1));
+			}
+			return java.lang.Math.sqrt(stdevsquared);
+		}
+		else
+			return 0;
 	}
 }

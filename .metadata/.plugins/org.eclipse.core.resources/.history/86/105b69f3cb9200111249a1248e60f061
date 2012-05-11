@@ -1,0 +1,129 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.util.ArrayList;
+
+
+public class Point {
+	private int transactions;
+	private int clients;
+	private int timeoutTime;
+	
+	private long sumTimeBeforeInfo;
+	private long sumTimeAfterInfo;
+	private int transactionTimeouts;
+	private int connectionTimeouts;
+	private int correctConnections;
+	
+	private ArrayList<Integer> allTimesBeforeInfo;
+	private ArrayList<Integer> allTimesAfterInfo;
+	
+	public Point(int tx, int cli, int totime){
+		this.transactions = tx;
+		this.clients = cli;
+		this.timeoutTime = totime;
+	}
+	public int getTransactions(){
+		return this.transactions;
+	}
+	public int getClients(){
+		return this.clients;
+	}
+	public int getTimeoutTime(){
+		return this.timeoutTime;
+	}
+	public long getSumTimeBeforeInfo() {
+		return sumTimeBeforeInfo;
+	}
+	public void setSumTimeBeforeInfo(long timeBeforeInfo) {
+		this.sumTimeBeforeInfo = timeBeforeInfo;
+	}
+	public long getSumTimeAfterInfo() {
+		return sumTimeAfterInfo;
+	}
+	public void setSumTimeAfterInfo(long timeAfterInfo) {
+		this.sumTimeAfterInfo = timeAfterInfo;
+	}
+	public int getTransactionTimeouts() {
+		return transactionTimeouts;
+	}
+	public void setTransactionTimeouts(int transactionTimeouts) {
+		this.transactionTimeouts = transactionTimeouts;
+	}
+	public int getConnectionTimeouts() {
+		return connectionTimeouts;
+	}
+	public void setConnectionTimeouts(int connectionTimeouts) {
+		this.connectionTimeouts = connectionTimeouts;
+	}
+	public void setCorrectConnections(int correctConnections){
+		this.correctConnections = correctConnections;
+	}
+	public void setAllTimesBeforeInfo(ArrayList<Integer> atbi){
+		this.allTimesBeforeInfo = atbi;
+	}
+	public void setAllTimesAfterInfo(ArrayList<Integer> atai){
+		this.allTimesAfterInfo = atai;
+	}
+	public void print(String filename){
+		/*System.out.println("Transactions : " + transactions);
+		System.out.println("Clients : " + clients);
+		System.out.println("timeoutTime : " + timeoutTime);
+		System.out.println("sumTimeBeforeInfo : " + sumTimeBeforeInfo);
+		System.out.println("sumTimeAfterInfo : " + sumTimeAfterInfo);
+		System.out.println("transactionTimeouts : " + transactionTimeouts);
+		System.out.println("connectionTimeouts : " + connectionTimeouts);
+		System.out.println("correctConnections : " + correctConnections);
+		System.out.println("Mean time for measurements before the infoGET : " + (sumTimeBeforeInfo / clients));
+		System.out.println("Mean time for measurements after the infoGET : " + (sumTimeAfterInfo / clients)); */
+		
+		String content = "";
+		long meanBeforeInfo = -1;
+		long meanAfterInfo = -1;
+		if(correctConnections != 0){
+			meanBeforeInfo = (sumTimeBeforeInfo / correctConnections);
+			meanAfterInfo = (sumTimeAfterInfo / correctConnections);
+		}
+			
+			
+		double standardDeviationBeforeInfo = computeStDev(allTimesBeforeInfo, meanBeforeInfo);
+		double standardDeviationAfterInfo = computeStDev(allTimesAfterInfo, meanAfterInfo);
+		
+		content = "";
+		content += "Transactions,Clients,timeoutTime,sumTimeBeforeInfo,sumTimeAfterInfo,transactionTimeouts,connectionTimeouts,MeanTimeBeforeInfoGET,MeanTimeAfterInfoGET,StandardDeviation\n";
+		content += transactions + "," + clients + "," + timeoutTime + "," + sumTimeBeforeInfo + "," + sumTimeAfterInfo + "," + transactionTimeouts + "," + connectionTimeouts + "," + correctConnections + "," + meanBeforeInfo + "," + meanAfterInfo + "," + standardDeviationBeforeInfo + "," + standardDeviationAfterInfo;
+		
+		//Transactions,Clients,timeoutTime,sumTimeBeforeInfo,sumTimeAfterInfo,transactionTimeouts,connectionTimeouts,Mean time for measurements before the infoGET,Mean time for measurements after the infoGET, Standard Dev before info, Standard Dev after info
+		//1,100,60,216947,5788,0,0,2169,57,0
+		
+		{
+			  try{
+			  // Create file
+			  String[] result = filename.split("/");
+			  FileWriter fstream = new FileWriter("statistics/" + result[1] + "_statistics.txt");
+			  BufferedWriter out = new BufferedWriter(fstream);
+			  out.write(content);
+			  //Close the output stream
+			  out.close();
+			  }catch (Exception e){//Catch exception if any
+			  System.err.println("Error: " + e.getMessage());
+			  }
+			  }
+	}
+	
+	public double computeStDev(ArrayList<Integer> times, long mean){
+		//compute squared deviation & sum
+		int sum = 0;
+		for(int i = 0; i < times.size(); i++){
+			int v = times.get(i);
+			v = (int) (v - mean);
+			v = v * v;
+			sum += v;
+		}
+		if((times.size() - 1) > 0){
+			double stdevsquared = sum / (times.size() - 1);
+			return java.lang.Math.sqrt(stdevsquared);
+		}
+		else
+			return 0;
+	}
+}
